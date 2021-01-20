@@ -38,13 +38,13 @@ generateExpectedIndices=function(diri, basedir.dir) {
     if(chemistry=="MiniSeq Rapid High" | chemistry=="MiSeq") {i5RC.toggle=F} 
 
     # setup indices -----------------------------------------------------
-    i7s=plater::read_plates(paste0(basedir.dir, 'reference/s2_r.csv'), well_ids_column="Sample_Well")
+    i7s=plater::read_plates(cfg$i7_plate_key_file, well_ids_column="Sample_Well")
     i7s=tidyr::gather(i7s, Plate_ID, index, 3:ncol(i7s))
     i7s$index=as.vector(sapply(i7s$index, revcomp))
     i7s$Plate_ID=paste0('Plate', i7s$Plate_ID)
     i7s$Sample_ID=paste0(i7s$Plate_ID,'-', i7s$Sample_Well)
 
-    i5s=plater::read_plates(paste0(basedir.dir, 'reference/s2_f.csv'), well_ids_column="Sample_Well")
+    i5s=plater::read_plates(cfg$i5_plate_key_file, well_ids_column="Sample_Well")
     i5s=tidyr::gather(i5s, Plate_ID, index2, 3:ncol(i5s))
     if(i5RC.toggle) { i5s$index2=as.vector(sapply(i5s$index2, revcomp)) }
     i5s$Plate_ID=paste0('Plate', i5s$Plate_ID)

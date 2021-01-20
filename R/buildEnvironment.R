@@ -6,7 +6,7 @@ usethis::use_pipe(export =TRUE)
 #' This function creates an env() containing information about directory structures and key run parameters.
 #'
 #' @export
-buildEnvironment=function(basedir.dir, remote.dir, localmirror.dir, bcl.dir, threads=8, lbuffer=30e6, fastqcr=F) {
+buildEnvironment=function(basedir.dir, remote.dir, localmirror.dir, bcl.dir, threads=8, lbuffer=30e6, fastqcr=F, i7_plate_key_file=NULL, i5_plate_key_file=NULL) {
     cfg = new.env(parent=emptyenv())
     path_to_bs=tryCatch(system('command -v bs', intern=T), error=function(e) {return(NULL)})
     path_to_bcl2fastq=tryCatch(system('command -v bcl2fastq', intern=T), error=function(e) {return(NULL)})
@@ -14,7 +14,21 @@ buildEnvironment=function(basedir.dir, remote.dir, localmirror.dir, bcl.dir, thr
     if(is.null(path_to_bs)) {print('bs CLI tool not found in PATH')}
     if(is.null(path_to_bcl2fastq)) {print('bcl2fastq not found in PATH')}
     if(!(bs_config_present)) {print('basespace cfg file not found at ~/.basespace/default.cfg')}
- # Directory structures on samba share -------------------------------- 
+
+    #i7_plate_key_file=    paste0(basedir.dir, 'reference/s2_r.csv')
+    #i5_plate_key_file =   paste0(basedir.dir, 'reference/s2_f.csv')
+    
+    if(is.null(i7_plate_key_file)){
+    i7_plate_key_file =  system.file("keys", "s2_r.csv", package="swabseqr")
+    }
+    if(is.null(i5_plate_key_file)){
+    i5_plate_key_file =  system.file("keys", "s2_f.csv", package="swabseqr")
+    }
+
+    cfg$i7_plate_key_file=i7_plate_key_file
+    cfg$i5_plate_key_file=i5_plate_key_file
+
+# Directory structures on samba share -------------------------------- 
     # seq.dir is path to location of yaml, summary stats for each run, and reports
     seq.dir=paste0(remote.dir, 'seq/')
     seq.run.dir=paste0(remote.dir, 'seq/runs/')
