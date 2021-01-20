@@ -44,3 +44,7 @@ Suggests:
     fastqcr,
     devtools,
     roxygen2
+SystemRequirements:
+    bcl2fastq (>= 2.20.0.422),
+    bs (>= 1.1.0),
+    rsync
