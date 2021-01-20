@@ -1,4 +1,4 @@
-### swabseqr UCLA SwabSeq Analysis R package for swabseq covid detection assay
+### swabseqr: UCLA SwabSeq Analysis R package for the swabseq covid detection assay
 
 #### Installation
 
