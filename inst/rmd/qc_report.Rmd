@@ -1,0 +1,211 @@
+---
+title: "QC Report"
+date: "Report generated: `r format(Sys.time())`"
+output:
+      html_document:
+      highlight: tango
+      code_folding: hide
+        # number_sections: yes
+        # toc: yes
+        # toc_depth: 2
+        # toc_float: yes
+params:
+  experiment: NA
+  bcl.dir: NA
+  amp.match.summary: NA
+  seq.metrics: NA
+  samples_with_ids: NA
+  samples_to_report: NA
+  dlong: NA
+  dwide: NA
+---
+
+# `r paste("Experiment:", params$experiment)`
+
+```{r include=FALSE}
+#library(ggplot2)
+#library(knitr)
+#library(DT)
+#library(XML)
+
+xmlinfo=XML::xmlToList(XML::xmlParse(paste0(params$bcl.dir, 'RunParameters.xml')))
+chemistry=xmlinfo$Chemistry
+#MiniSeq High / MiniSeq Rapid High / NextSeq Mid / NextSeq High
+instrument=xmlinfo$ComputerName
+FlowCellInfo=xmlinfo$FlowCellRfidTag
+ReagentKitInfo=xmlinfo$ReagentKitRfidTag
+# library(ggpubr)
+```
+#### `r paste("BCL Directory:",  xmlinfo$RunID)`
+#### `r paste("Instrument:",  instrument,  xmlinfo$InstrumentID)`
+#### `r paste("Chemistry:",  chemistry)`
+#### `r paste("Start Time:", xmlinfo$RunStartTimeStamp)`
+******
+
+
+## Sequencer metrics
+```{r echo=FALSE}
+params$seq.metrics %>%
+knitr::kable()
+```
+
+## FlowCell Info
+```{r echo=FALSE}
+data.frame(FlowCellInfo) %>%
+knitr::kable()
+```
+
+## ReagentKit Info
+```{r echo=FALSE}
+data.frame(ReagentKitInfo) %>%
+knitr::kable()
+```
+
+## Alignment summary
+```{r echo=FALSE}
+params$amp.match.summary %>% 
+knitr::kable()
+```
+
+## Results Summary
+```{r echo=FALSE}
+results.summary=data.frame(
+    'TotalSamplesPocessed'=sum(params$samples_to_report),                         
+    'Inconclusives'=sum(params$dwide$result[params$samples_to_report]=='Inconclusive'),
+    'NoVirusDetected'=sum(params$dwide$result[params$samples_to_report]=='Negative'),
+    'VirusDetected'=sum(params$dwide$result[params$samples_to_report]=='Positive'))
+results.summary %>% 
+    knitr::kable()
+```
+
+# Plate Maps {.tabset .tabset-fade}
+
+## Plate maps (384)
+```{r echo=FALSE, fig.height=10, fig.width=12}
+params$dlong %>%  
+ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=log10(Count))) + 
+  ggplot2::geom_raster() +
+  ggplot2::coord_equal() +
+  ggplot2::facet_grid(amplicon~Plate_384+Plate_ID) +
+  ggplot2::scale_fill_viridis_c(option = 'plasma')+ggplot2::ggtitle(params$experiment)
+```
+
+## Swabseq Calls (384)
+```{r echo=FALSE, fig.height=10, fig.width=12}
+params$dwide %>% 
+ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=result)) + 
+  ggplot2::geom_raster() +
+  ggplot2::coord_equal() +
+  ggplot2::facet_grid(~Plate_384+Plate_ID) +
+  #scale_fill_viridis_c(option = 'plasma')+
+  ggplot2::ggtitle(params$experiment)
+```
+
+## S2 and S2 spike QC (384)
+```{r echo=FALSE, fig.height=10, fig.width=12}
+params$dwide %>% 
+ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=Stotal>cfg$coreVars$Stotal)) + 
+  ggplot2::geom_raster() +
+  ggplot2::coord_equal() +
+  ggplot2::facet_grid(~Plate_384+Plate_ID) +
+  #scale_fill_viridis_c(option = 'plasma')+
+  ggplot2::ggtitle(params$experiment)
+```
+
+## RPP30 QC (384)
+```{r echo=FALSE, fig.height=10, fig.width=12}
+params$dwide %>% 
+ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=RPP30_Detected)) + 
+  ggplot2::geom_raster() +
+  ggplot2::coord_equal() +
+  ggplot2::facet_grid(~Plate_384+Plate_ID) +
+  #scale_fill_viridis_c(option = 'plasma')+
+  ggplot2::ggtitle(params$experiment)
+```
+
+## Plate maps (96)
+```{r echo=FALSE, fig.height=10, fig.width=12}
+psplit=split(params$dlong, params$dlong$Plate_384)
+lapply(psplit, function(x) {
+           x%>%
+  ggplot2::ggplot(ggplot2::aes(x=Col96, y=Row96, fill=log10(Count))) + 
+  ggplot2::geom_raster() +
+  ggplot2::coord_equal() +
+  ggplot2::facet_grid(amplicon~Plate_384+Plate_ID+quadrant_96) +
+  ggplot2::scale_fill_viridis_c(option = 'plasma')+ggplot2::ggtitle(params$experiment)
+})
+```
+
+## S2 and S2 spike QC (96)
+```{r echo=FALSE, fig.height=10, fig.width=12}
+psplit=split(params$dwide, params$dwide$Plate_384)
+lapply(psplit, function(x) {
+           x%>%
+ggplot2::ggplot(ggplot2::aes(x=Col96, y=Row96, fill=Stotal>500)) + 
+  ggplot2::geom_raster() +
+  ggplot2::coord_equal() +
+  ggplot2::facet_grid(~Plate_384+Plate_ID+quadrant_96) +
+  #scale_fill_viridis_c(option = 'plasma')+
+  ggplot2::ggtitle(params$experiment)
+})
+```
+
+## RPP30 QC (96)
+```{r echo=FALSE, fig.height=10, fig.width=12}
+psplit=split(params$dwide, params$dwide$Plate_384)
+lapply(psplit, function(x) {
+           x%>%
+ggplot2::ggplot(ggplot2::aes(x=Col96, y=Row96, fill=RPP30_Detected)) + 
+  ggplot2::geom_raster() +
+  ggplot2::coord_equal() +
+  ggplot2::facet_grid(~Plate_384+Plate_ID+quadrant_96) +
+  #scale_fill_viridis_c(option = 'plasma')+
+  ggplot2::ggtitle(params$experiment)
+})
+```
+
+## Swabseq Calls (96)
+```{r echo=FALSE, fig.height=10, fig.width=12}
+psplit=split(params$dwide, params$dwide$Plate_384)
+lapply(psplit, function(x) {
+           x%>%
+ggplot2::ggplot(ggplot2::aes(x=Col96, y=Row96, fill=result)) + 
+  ggplot2::geom_raster() +
+  ggplot2::coord_equal() +
+  ggplot2::facet_grid(~Plate_384+Plate_ID+quadrant_96) +
+  #scale_fill_viridis_c(option = 'plasma')+
+  ggplot2::ggtitle(params$experiment)
+})
+```
+
+## Leave Out Tubes QC (96)
+```{r echo=FALSE, fig.height=10, fig.width=12}
+psplit=split(params$dwide, params$dwide$Plate_384)
+lapply(psplit, function(x) {
+           x%>%
+ggplot2::ggplot(ggplot2::aes(x=Col96, y=Row96, fill=id_tubes)) + 
+  ggplot2::geom_raster() +
+  ggplot2::coord_equal() +
+  ggplot2::facet_grid(~Plate_384+Plate_ID+quadrant_96) +
+  #scale_fill_viridis_c(option = 'plasma')+
+  ggplot2::ggtitle(params$experiment)
+})
+```
+
+# Results
+```{r echo=FALSE}
+
+dsummary.reduced= params$dwide%>% 
+    dplyr::filter(params$samples_with_ids) %>%  
+    dplyr::select(Barcode,id_tubes, Plate_96_BC,Pos96, quadrant_96, Plate_384,S2,S2_spike, RPP30,result)
+
+dsummary.reduced %>% 
+    tibble::add_column(S2_ratio= round((dsummary.reduced$S2+1)/(dsummary.reduced$S2_spike+1),digits=3),
+               .before='result') %>%
+    DT::datatable(options=list(pageLength=25,order=list(list(11,'desc'))))%>% 
+    DT::formatStyle('id_tubes', target='row', backgroundColor=DT::styleEqual(c(TRUE), c("lightblue"))) %>%
+    DT::formatStyle('result', target='row', backgroundColor=DT::styleEqual(c("Positive"), c("pink")))
+```
+
+
+
