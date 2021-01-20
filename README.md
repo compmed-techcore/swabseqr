@@ -1,4 +1,4 @@
-### swabseqr: UCLA SwabSeq Analysis R package for the swabseq covid detection assay
+### swabseqr: SwabSeq Analysis R package for the swabseq covid detection assay
 
 #### Installation
 
@@ -16,4 +16,7 @@ The `bs` CLI config file in ~/.basespace/default.cfg should be setup and workspa
 `bs auth --scopes "BROWSE GLOBAL,READ GLOBAL,CREATE GLOBAL,MOVETOTRASH GLOBAL,START APPLICATIONS,MANAGE APPLICATIONS" --force`
 
 see [main.R](examples/main.R) for example usage
+
+
+see [Octant Notion SwabSeq page](https://www.notion.so/Octant-SwabSeq-Testing-9eb80e793d7e46348038aa80a5a901fd) for information about technology licensing
 
