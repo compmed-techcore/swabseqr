@@ -1,9 +1,6 @@
-## UCLA SwabSeq Aanlysis R package swabseqr for automated processing pipeline
-___
+### swabseqr UCLA SwabSeq Analysis R package for swabseq covid detection assay
 
-## R package wrapper for swabseq covid detection assay
-
-## Installation
+#### Installation
 
 The swabseqr package can be downloaded and installed by running the following command from the R console:
 
