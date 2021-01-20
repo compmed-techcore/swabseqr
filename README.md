@@ -8,7 +8,7 @@ ___
 The swabseqr package can be downloaded and installed by running the following command from the R console:
 
 ```r
-devtools::install_github("joshbloom/swabseqr")
+devtools::install_github("joshsbloom/swabseqr")
 ```
 
 Make sure you have the `rsync` command line tool available.
