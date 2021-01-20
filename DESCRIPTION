@@ -1,0 +1,46 @@
+Package: swabseqr
+Title: Analysis Pipeline for Swabseq Covid Testing
+Version: 1.0
+Authors@R: 
+    person(given = "Joshua",
+           family = "Bloom",
+           role = c("aut", "cre"),
+           email = "jbloom@mednet.ucla.edu",
+           comment = c(ORCID = ""))
+Description: Process Illumina BCLs for swabseq runs. Generate reports of covid detection status.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Depends: 
+    R(>= 3.4)
+biocViews:
+Imports:
+    tools,
+    rqdatatable(>= 1.2.7),
+    data.table (>= 1.12.8),
+    plater (>= 1.0.1),
+    XML (>= 3.98),
+    seqinr (>= 3.3),
+    yaml (>= 2.1),
+    rquery (>= 1.4.4),
+    knitr (>= 1.21),
+    DT (>= 0.17),
+    tidyr (>= 0.8),
+    magrittr (>= 1.5),
+    dplyr (>= 0.8),
+    tibble (>= 3.0.1),
+    readr (>= 1.1.1),
+    wrapr (>= 2.0.0),
+    rmarkdown (>= 1.9),
+    ggplot2 (>= 3.3.0),
+    Biobase (>= 2.36),
+    S4Vectors (>= 0.14),
+    ShortRead (>= 1.34),
+    savR (>= 1.24.0),
+    usethis
+Suggests:
+    fastqcr,
+    devtools,
+    roxygen2
