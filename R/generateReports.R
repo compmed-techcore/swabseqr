@@ -31,7 +31,8 @@ addIdentifiers=function(...) {
                                     dplyr::left_join(orders.files,"Barcode") %>% 
                                     dplyr::mutate_at(dplyr::vars(Organization), ~tidyr::replace_na(.,'Missing')) %>%
                                     dplyr::arrange(dplyr::desc(result), orders_file, Barcode) %>%
-                                    readr::write_csv(paste0(odir,'/results/', rTable$Experiment[r],'_report.csv'))
+                                    #EDIT HERE make sure this doesn't get fancy with scientific notation!
+                                    utils::write.csv(paste0(odir,'/results/', rTable$Experiment[r],'_report.csv'), row.names=F)
                  
                  #add column with illumina run name 
                  #add coulumn with experiment name               
