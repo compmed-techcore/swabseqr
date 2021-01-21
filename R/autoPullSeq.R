@@ -88,7 +88,6 @@ downloadRuns=function(...) {
 #'
 #' @export
 bcl2fastqRuns=function(...) {
-    threads=cfg$coreVars$threads
     rTable = getRunTableStatus()
     currentWorkingDir=getwd() 
     for(r in 1:nrow(rTable)) {
@@ -99,7 +98,7 @@ bcl2fastqRuns=function(...) {
 
         if(rTable$Downloaded[r] & !rTable$Bcl2fastq[r]){
             
-            if(file.exists(paste0(bcl.dir, 'RTAComplete.txt'))) { 
+            if(file.exists(paste0(bcl.dir, 'RTAComplete.txt')) & file.exists(paste0(bcl.dir, 'RTARead3Complete.txt')) ) { 
                 setwd(bcl.dir)
                 # if fastqs don't exist run bcl2fastq to generate them 
                 fastqR1  <- paste0(bcl.dir, 'out/Undetermined_S0_R1_001.fastq.gz')
@@ -108,7 +107,7 @@ bcl2fastqRuns=function(...) {
                     # run bcl2fastq to generate fastq.gz files (no demux is happening here)
                     #note, reduce threads if necessary
                     status=system(paste("bcl2fastq --runfolder-dir . --output-dir out/ --create-fastq-for-index-reads  --ignore-missing-bcl --use-bases-mask=Y26,I10,I10 --processing-threads",
-                                 threads,
+                                 cfg$coreVars$threads,
                                  "--no-lane-splitting --sample-sheet /dev/null"))
                     if(cfg$coreVars$fastqc) {fastqcr::fastqc(fq.dir=paste0(bcl.dir, 'out/'), qc.dir=paste0(odir, '/'), threads=3) }
 
