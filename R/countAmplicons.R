@@ -105,16 +105,16 @@ errorCorrectIdxAndCountAmplicons=function(rid, count.table, ind1,ind2){
 }
 
 #main engine, match observed to expected sequences
-buildCountTables=function(bcl.dir, nbuffer, amplicons, count.tables) {
+buildCountTables=function(bcl.dir, nbuffer, readerBlockSize, amplicons, count.tables) {
     
     fastq_dir  <- paste0(bcl.dir, 'out/')
     in.fileI1  <- paste0(fastq_dir, 'Undetermined_S0_I1_001.fastq.gz')
     in.fileI2  <- paste0(fastq_dir, 'Undetermined_S0_I2_001.fastq.gz')
     in.fileR1  <- paste0(fastq_dir, 'Undetermined_S0_R1_001.fastq.gz')
             
-    i1 <- ShortRead::FastqStreamer(in.fileI1, nbuffer, readerBlockSize = 1e9, verbose = T)
-    i2 <- ShortRead::FastqStreamer(in.fileI2, nbuffer, readerBlockSize = 1e9, verbose = T)
-    r1 <- ShortRead::FastqStreamer(in.fileR1, nbuffer, readerBlockSize = 1e9, verbose = T)
+    i1 <- ShortRead::FastqStreamer(in.fileI1, nbuffer, readerBlockSize = readerBlockSize, verbose = T)
+    i2 <- ShortRead::FastqStreamer(in.fileI2, nbuffer, readerBlockSize = readerBlockSize, verbose = T)
+    r1 <- ShortRead::FastqStreamer(in.fileR1, nbuffer, readerBlockSize = readerBlockSize, verbose = T)
 
     amp.match.summary.table=rep(0, length(amplicons)+1)
     names(amp.match.summary.table)=c(names(amplicons),'no_align')
@@ -163,13 +163,14 @@ buildCountTables=function(bcl.dir, nbuffer, amplicons, count.tables) {
 countAmplicons=function(rTable,index.key,bcl.dir, odir, coreVars){
     amplicons=coreVars$amplicons
     lbuffer=coreVars$lbuffer
+    readerBlockSize=coreVars$readerBlockSize
     count.tables=initAmpliconCountTables(index.key, amplicons)
     #this code block is obviated by checks outside this function for config.yaml status
     #if(!file.exists(paste0(odir, '/countTable.RDS'))) { 
     
         # given expected directory for bcl files, buffer of lines to read, and expected amplicons,
         #find all amplicons that match expected sequences for read1 and the two index sequences within 1 hamming distance for each
-        results.list=buildCountTables(bcl.dir, lbuffer, amplicons, count.tables)
+        results.list=buildCountTables(bcl.dir, lbuffer, readerBlockSize, amplicons, count.tables)
         results=results.list[['count.tables']]
         amp.match.summary.table=results.list[['amp.match.summary.table']]
         do.call('rbind', results) %>% readr::write_csv(paste0(odir, '/countTable.csv')) 

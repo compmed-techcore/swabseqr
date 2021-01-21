@@ -6,7 +6,10 @@ usethis::use_pipe(export =TRUE)
 #' This function creates an env() containing information about directory structures and key run parameters.
 #'
 #' @export
-buildEnvironment=function(basedir.dir, remote.dir, localmirror.dir, bcl.dir, threads=8, lbuffer=30e6, fastqcr=F, i7_plate_key_file=NULL, i5_plate_key_file=NULL) {
+buildEnvironment=function(basedir.dir, remote.dir, localmirror.dir, bcl.dir, threads=8, 
+                          lbuffer=30e6,
+                          readerBlockSize=1e8,
+                          fastqcr=F, i7_plate_key_file=NULL, i5_plate_key_file=NULL) {
     cfg = new.env(parent=emptyenv())
     path_to_bs=tryCatch(system('command -v bs', intern=T), error=function(e) {return(NULL)})
     path_to_bcl2fastq=tryCatch(system('command -v bcl2fastq', intern=T), error=function(e) {return(NULL)})
@@ -27,7 +30,7 @@ buildEnvironment=function(basedir.dir, remote.dir, localmirror.dir, bcl.dir, thr
 
     cfg$i7_plate_key_file=i7_plate_key_file
     cfg$i5_plate_key_file=i5_plate_key_file
-
+    
 # Directory structures on samba share -------------------------------- 
     # seq.dir is path to location of yaml, summary stats for each run, and reports
     seq.dir=paste0(remote.dir, 'seq/')
@@ -73,7 +76,7 @@ buildEnvironment=function(basedir.dir, remote.dir, localmirror.dir, bcl.dir, thr
     cfg$path_to_bcl2fastq= path_to_bcl2fastq
     cfg$bs_config_present=bs_config_present
 
-    cfg$coreVars=setAnalysisVariables(threads=threads,lbuffer=lbuffer,fastqcr=fastqcr)
+    cfg$coreVars=setAnalysisVariables(threads=threads,lbuffer=lbuffer,readerBlockSize=readerBlockSize,fastqcr=fastqcr)
 #-------------------------------------------------------------------------
     return(cfg)
 }
@@ -83,7 +86,7 @@ buildEnvironment=function(basedir.dir, remote.dir, localmirror.dir, bcl.dir, thr
 #' This function is called by buildEnvironment() and sets key analysis parameters, exposed here for user overwriting.
 #'
 #' @export
-setAnalysisVariables=function(versi=2, diversifiedSpike=T,lbuffer=30000000, threads=8,fastqcr=F){
+setAnalysisVariables=function(versi=2, diversifiedSpike=T,lbuffer=30000000, readerBlockSize=1e8, threads=8,fastqcr=F){
     if(versi==1) {
         flagLowPositive=F
         diversifiedSpike=F
@@ -123,6 +126,7 @@ setAnalysisVariables=function(versi=2, diversifiedSpike=T,lbuffer=30000000, thre
     return(list(
             versi=versi,
             lbuffer=lbuffer,
+            readerBlockSize=readerBlockSize,
             threads=threads,
             fastqcr=fastqcr,
             flagLowPositive=flagLowPositive,

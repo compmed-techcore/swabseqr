@@ -74,6 +74,7 @@ syncReports=function(..., syncToShared=T) {
     rTable = getRunTableStatus()
      
     dir.create(cfg$localMirrorSeq.dir)
+    # sync remote/seq dir to local mirror
     system(paste0('rsync  -ahe --update ',  cfg$seq.dir, ' --delete ', cfg$localMirrorSeq.dir))
 
     seqStartTimes=getSeqStartTimes() 
