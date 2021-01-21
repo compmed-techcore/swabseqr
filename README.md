@@ -19,6 +19,5 @@ The `bs` CLI config file in ~/.basespace/default.cfg should be setup and workspa
 see [main.R](examples/main.R) for example usage
 
 #### Additional Background
-see [medrxiv preprint](https://www.medrxiv.org/content/10.1101/2020.08.04.20167874v2)
-see [Octant Notion SwabSeq page](https://www.notion.so/Octant-SwabSeq-Testing-9eb80e793d7e46348038aa80a5a901fd) for information about technology licensing
+see [medrxiv preprint](https://www.medrxiv.org/content/10.1101/2020.08.04.20167874v2) and [Octant Notion SwabSeq page](https://www.notion.so/Octant-SwabSeq-Testing-9eb80e793d7e46348038aa80a5a901fd) for information about technology and licensing
 
