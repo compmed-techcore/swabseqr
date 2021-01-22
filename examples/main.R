@@ -25,7 +25,7 @@ cfg = buildEnvironment(basedir.dir,
                        remote.dir, 
                        localmirror.dir, 
                        bcl.dir, 
-                       threads=16, lbuffer=60e6, fastqcr=F)
+                       threads=16, lbuffer=60e6, readerBlockSize=1e8, fastqcr=F)
 
 autoRun()
 
