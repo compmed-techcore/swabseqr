@@ -43,16 +43,23 @@ The following entries can be modifed to control pipeline state:
 
 * `Bcl2fastq: (yes/no)` tracks/controls whether `bcl2fastq` has been run to generate Undetermined.*.fastq.gz files for each run in bcls/${Name}/out/
 
-* `Demumxed: (yes/no)` tracks/controls whether amplicon and index matching has been performed. Note this step depends only on the expected molecular barcodes and can run without sample matrix tube information. 
+* `Demumxed: (yes/no)` tracks/controls whether amplicon and index matching has been performed. Note this step depends only on the expected molecular barcodes and runs without sample matrix tube information. 
 
 * `Analyzed: (yes/no)` tracks/controls whether seq/results/${Experiment}_report.csv has been generated 
 (this file merges swabseq results with order IDs) and whether seq/results/${Experiment}.html 
 has been generated (this is an html report for each sequencing run)
+    - at this step matrix tube barcodes are merged with the expected molecular barcodes, and orders are merged with the matrix tube barcodes 
 
 * `Reported: (yes/no)` tracks/controls whether csv files per ordering institute and inconclusives/postitives to pull, the file tracking missing orders 
 (orders in preciseQ but not received by the lab) are updated at missing/${Date}_orders_not_accession.csv, and the file tracking completed orders are updated at completed/${Date}_current_results.csv
 
+___
 
+The most common intervention is to set the following for a run
+```yaml
+ Analyzed: no
+ Reported: no
+```
 
 
 ### Directory Structures
