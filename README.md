@@ -84,6 +84,24 @@ see [medrxiv preprint](https://www.medrxiv.org/content/10.1101/2020.08.04.201678
 └── test
 ```
 
+`seq/config.yaml` monitors and controls state of the processing pipeline
+```yaml
+210122_NB552456_0043_AHM5M5AFX2:
+     Analyzed: yes
+     Bcl2fastq: yes
+     Demuxed: yes
+     Downloaded: yes
+     Flowcell: HM5M5AFX2
+     Hname: T72
+     ID: '200170974'
+     Reported: yes
+     Status: Complete
+     Experiment: 01222021_JC_AM_N_1
+     Keyfile: 01222021_JC_AM_N_1.csv
+```
+
+
+
 #### Directory structure for BCLs `bcl.dir`
 ```bash
 ├── 210122_MN01371_0034_A000H3F7MF
