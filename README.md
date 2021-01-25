@@ -21,11 +21,74 @@ see [main.R](examples/main.R) for example usage
 ### Additional Background
 see [medrxiv preprint](https://www.medrxiv.org/content/10.1101/2020.08.04.20167874v2) and [Octant Notion SwabSeq page](https://www.notion.so/Octant-SwabSeq-Testing-9eb80e793d7e46348038aa80a5a901fd) for information about technology and licensing
 
-### Directory Structure
+### Directory Structures
 
-
-#### bcl.dir
+#### Remote directory structure for shared drive: `remote.dir`
 ```bash
+.
+├── completed
+│   ├── 2021-01-22_current_results.csv
+│   ├── 2021-01-23_current_results.csv
+│   └── 2021-01-23_current_results.csv
+├── duketracking
+├── exportedorders
+├── missing
+│   ├── 2021-01-21_orders_not_accessioned.csv
+│   ├── 2021-01-22_orders_not_accessioned.csv
+│   ├── 2021-01-23_orders_not_accessioned.csv
+│   └── reformatted
+├── precisemdx_sftp_orders
+├── precisemdx_sftp_results
+├── receivedsamples
+│   ├── 01122021_JC_PM_MA_2.csv
+│   ├── 01132021_JC_AM_N_2.csv
+│   ├── 01132021_JC_PM_MC_1.csv
+│   └── parsed
+├── rosemaryDir
+├── seq
+│   ├── config.yaml
+│   ├── config.yaml.backup_210120
+│   ├── runs
+│   └── water_tubes
+├── swabseqsampletracking
+│   ├── 01182021_JC_AM_N_1
+│   ├── 01192021_AK_PM_MA_1
+│   ├── 01192021_JC_AM_MC_1
+│   ├── 01202021_JC_AM_N_1
+│   ├── 01202021_JC_PM_MA_1
+│   ├── 01212021_JC_AM_N_1
+│   ├── 01212021_JC_PM_MB_1
+│   ├── 01222021_JC_AM_N_1
+│   ├── 01222021_JC_PM_MB_1
+│   └── 01222021_MA_MD_MA_1
+│       ├── 01222021_MA_MD_MA_1.csv
+│       ├── 01222021_MA_MD_MA_1.xlsx
+│       ├── 01235005.csv
+│       ├── 01235022.csv
+│       ├── 01235034.csv
+│       ├── 01235192.csv
+│       ├── 10104958B1.csv
+│       ├── 10105016B1.csv
+│       ├── 10105363B1.csv
+│       ├── 10106718B1.csv
+│       ├── 10106791B1.csv
+│       ├── 10107040B1.csv
+│       ├── 10107395B1.csv
+│       ├── 10108322B1.csv
+│       ├── 10108347B1.csv
+│       ├── 10109577B1.csv
+│       ├── 10109768B1.csv
+│       ├── flowcell_barcode_MA.txt
+│       ├── LACAN037.csv
+│       ├── results
+│       ├── TapeStation T73.JPG
+│       └── uploaded
+└── test
+```
+
+#### Directory structure for BCLs `bcl.dir`
+```bash
+.
 ├── 210122_MN01371_0034_A000H3F7MF
 │   ├── Config
 │   ├── Data
@@ -71,6 +134,6 @@ see [medrxiv preprint](https://www.medrxiv.org/content/10.1101/2020.08.04.201678
     ├── SampleSheet.csv
     ├── T72_200170974.json
     └── Thumbnail_Images
-
-
 ```
+
+
