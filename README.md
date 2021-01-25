@@ -17,7 +17,7 @@ The `bs` CLI config file in ~/.basespace/default.cfg should be setup and workspa
 
 ### Usage
 see [main.R](examples/main.R) for example usage
-
+___
 
 #### `seq/config.yaml` monitors and controls state of the processing pipeline
 
