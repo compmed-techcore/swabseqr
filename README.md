@@ -54,6 +54,7 @@ see [medrxiv preprint](https://www.medrxiv.org/content/10.1101/2020.08.04.201678
 └── test
 ```
 #### `seq/config.yaml` monitors and controls state of the processing pipeline
+each sequencing run contains an entry like this
 ```yaml
 210122_NB552456_0043_AHM5M5AFX2:
      Analyzed: yes
@@ -68,7 +69,8 @@ see [medrxiv preprint](https://www.medrxiv.org/content/10.1101/2020.08.04.201678
      Experiment: 01222021_JC_AM_N_1
      Keyfile: 01222021_JC_AM_N_1.csv
 ```
-
+`Analyzed: yes/no` tracks wheter seq/results/${experiment}_report.csv has been generated, this file merges swabseq results with order IDs
+  
 
 
 
