@@ -5,7 +5,7 @@
 #' @param check.basespace.interval seconds before checking basespace to see if a run has updated
 #'
 #' @export
-autoRun=function(check.yaml.interval=30, check.basespace.interval=600){
+autoRun=function(check.yaml.interval=30, check.basespace.interval=600, syncToShared=T, writeCurrentResultsTable=F){
     if(!exists("cfg")) { print('please run buildEnvironment() before autoRun()'); return(NULL)}
 
     if(!file.exists(cfg$yaml.cfg.file))  {
@@ -41,7 +41,7 @@ autoRun=function(check.yaml.interval=30, check.basespace.interval=600){
             addIdentifiers()
 
             print('generating reports')
-            syncReports()
+            syncReports(syncToShared=syncToShared, writeCurrentResultsTable=writeCurrentResultsTable)
             print(paste('Done, pausing for ', check.basespace.interval, 'seconds'))
         }
         before=tools::md5sum(cfg$yaml.cfg.file)
@@ -142,7 +142,7 @@ demuxRuns=function(...) {
         odir=paste0(cfg$seq.run.dir, runName)
         dir.create(odir)
         if(rTable$Downloaded[r] & rTable$Bcl2fastq[r] & !rTable$Demuxed[r]){
-            index.key=generateExpectedIndices(odir, cfg$basedir.dir)
+            index.key=generateExpectedIndices(odir)
             status=countAmplicons(rTable, index.key, bcl.dir, odir, cfg$coreVars)
             if(status) { rTable$Demuxed[r] = T  
                          write_yaml_cfg(rTable,cfg)

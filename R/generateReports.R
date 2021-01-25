@@ -221,7 +221,7 @@ buildResultsList=function(rTable, r, odir,cfg){
          #new.key.file=paste0(zipdir, 'keyfile.csv')
          system(paste("sed 1d", sample.key.file, "| cut -f1 -d ',' --complement - >", sample.key.file.formatted))
        
-         index.key=generateExpectedIndices(odir, cfg$basedir.dir)
+         index.key=generateExpectedIndices(odir)
          index.key=parseKeyAndMerge(index.key, sample.key.file.formatted)
          
          #read back in count tables 

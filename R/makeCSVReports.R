@@ -70,7 +70,7 @@ getSeqStartTimes=function(...) {
 #' @param syncToShared flag to sync results to sample tracking folder, set to F for debugging 
 #'
 #' @export
-syncReports=function(..., syncToShared=T) {
+syncReports=function(..., syncToShared=T, writeCurrentResultsTable=F) {
     rTable = getRunTableStatus()
      
     dir.create(cfg$localMirrorSeq.dir)
@@ -87,7 +87,10 @@ syncReports=function(..., syncToShared=T) {
         bcl.dir=paste0(cfg$bcl.dir, runName, '/')
         odir=paste0(cfg$seq.run.dir, runName)
         if(rTable$Downloaded[r] & rTable$Bcl2fastq[r] & rTable$Demuxed[r] & rTable$Analyzed[r] & !rTable$Reported[r]){
-        
+            if(writeCurrentResultsTable) {
+                currResults %>% utils::write.csv(paste0(cfg$remote.dir, 'completed/', Sys.Date(), '_current_results.csv'), row.names=F)
+            }
+            
             results=currResults %>% dplyr::filter(sequencingRunName==runName)
 
             currRunStartTime=seqStartTimes$sequencingRunStartTime[seqStartTimes$sequencingRunName==runName]

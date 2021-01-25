@@ -6,10 +6,13 @@ usethis::use_pipe(export =TRUE)
 #' This function creates an env() containing information about directory structures and key run parameters.
 #'
 #' @export
-buildEnvironment=function(basedir.dir, remote.dir, localmirror.dir, bcl.dir, threads=8, 
+buildEnvironment=function( remote.dir, localmirror.dir, bcl.dir,
+                          threads=8, 
                           lbuffer=30e6,
                           readerBlockSize=1e8,
-                          fastqcr=F, i7_plate_key_file=NULL, i5_plate_key_file=NULL) {
+                          fastqcr=F, 
+                          i7_plate_key_file=NULL, i5_plate_key_file=NULL) {
+    # for 16GB of ram consider lbuffer=5e6 and readerBlockSize=1e6 
     cfg = new.env(parent=emptyenv())
     path_to_bs=tryCatch(system('command -v bs', intern=T), error=function(e) {return(NULL)})
     path_to_bcl2fastq=tryCatch(system('command -v bcl2fastq', intern=T), error=function(e) {return(NULL)})
@@ -57,7 +60,6 @@ buildEnvironment=function(basedir.dir, remote.dir, localmirror.dir, bcl.dir, thr
     #mirror sample tracking locally
     localTracking.dir=paste0(localmirror.dir, '/swabseqsampletracking/')
 
-    cfg$basedir.dir=basedir.dir
     cfg$remote.dir=remote.dir
     cfg$localmirror.dir=localmirror.dir
     cfg$seq.dir=seq.dir

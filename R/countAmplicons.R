@@ -29,7 +29,7 @@ initAmpliconCountTables=function(index.key, amplicons) {
 }
 
 
-generateExpectedIndices=function(diri, basedir.dir) {
+generateExpectedIndices=function(diri) {
     xmlinfo=XML::xmlToList(XML::xmlParse(paste0(diri, '/RunParameters.xml')))
     chemistry=xmlinfo$Chemistry
     #MiniSeq High / MiniSeq Rapid High / NextSeq Mid / NextSeq High

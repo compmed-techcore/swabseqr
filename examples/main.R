@@ -21,43 +21,48 @@ bcl.dir=paste0(basedir.dir, 'bcls/')
 
 #store the many global variables somewhere
 #cfg = new.env(parent=emptyenv())
-cfg = buildEnvironment(basedir.dir, 
-                       remote.dir, 
+cfg = buildEnvironment(remote.dir, 
                        localmirror.dir, 
                        bcl.dir, 
-                       threads=16, lbuffer=60e6, readerBlockSize=1e8, fastqcr=F)
-
+                       #for beefier workstation, otherwise use defaults
+                       threads=16, lbuffer=60e6, readerBlockSize=1e8, 
+                       fastqcr=F
+                    )
+#default usage
 autoRun()
+
+
+#if you don't want it to update completed/
+autoRun(writeCurrentResultsTable=F)
 
 
 #first run
 #syncRuns(cfg, first.run=T)
 
 
+print('syncing config.yaml')
+syncRuns()
+#after=md5sum(cfg$yaml.cfg.file)
+print('downloading BCLs')
+downloadRuns()
+#before=md5sum(cfg$yaml.cfg.file)
+print('converting to fastq.gz')
+bcl2fastqRuns() 
+#after=md5sum(cfg$yaml.cfg.file)
 
-      print('syncing config.yaml')
-            syncRuns()
-            #after=md5sum(cfg$yaml.cfg.file)
-            print('downloading BCLs')
-            downloadRuns()
-            #before=md5sum(cfg$yaml.cfg.file)
-            print('converting to fastq.gz')
-            bcl2fastqRuns() 
-            #after=md5sum(cfg$yaml.cfg.file)
+print('demultiplexing runs and counting amplicons')
+#fail here
+demuxRuns() 
 
-            print('demultiplexing runs and counting amplicons')
-            #fail here
-            demuxRuns() 
+#before=md5sum(cfg$yaml.cfg.file)
+print('matching sequencing runs to key files')
+lookUpKeys()
 
-            #before=md5sum(cfg$yaml.cfg.file)
-            print('matching sequencing runs to key files')
-            lookUpKeys()
+print('matching samples to observed indices')
+addIdentifiers()
 
-            print('matching samples to observed indices')
-            addIdentifiers()
-
-            print('generating reports')
-            syncReports( syncToShared=F)
+print('generating reports')
+syncReports( syncToShared=F)
 
 
 
