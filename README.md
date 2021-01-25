@@ -18,9 +18,6 @@ The `bs` CLI config file in ~/.basespace/default.cfg should be setup and workspa
 ### Usage
 see [main.R](examples/main.R) for example usage
 
-### Additional Background
-see [medrxiv preprint](https://www.medrxiv.org/content/10.1101/2020.08.04.20167874v2) and [Octant Notion SwabSeq page](https://www.notion.so/Octant-SwabSeq-Testing-9eb80e793d7e46348038aa80a5a901fd) for information about technology and licensing
-
 ### Directory Structures
 
 #### Remote directory structure for shared drive: `remote.dir`
@@ -69,7 +66,18 @@ each sequencing run contains an entry like this
      Experiment: 01222021_JC_AM_N_1
      Keyfile: 01222021_JC_AM_N_1.csv
 ```
-`Analyzed: yes/no` tracks wheter seq/results/${experiment}_report.csv has been generated, this file merges swabseq results with order IDs
+
+* `Downloaded: yes/no` tracks whether a sequencing run has been downloaded from Illumnia Basespace CLI `bs` to bcls/ see (#bcl dir section)
+
+* `Bcl2fastq yes/no` tracks whether `bcl2fastq` has been run to generate Undetermined.*.fastq.gz files for 
+
+* 
+
+
+* `Analyzed: yes/no` tracks whether seq/results/${Experiment}_report.csv has been generated 
+(this file merges swabseq results with order IDs) and whether seq/results/${Experiment}.html 
+has been generated (this is an html report for each sequencing run)
+
   
 
 
@@ -77,7 +85,8 @@ each sequencing run contains an entry like this
 
 
 
-#### Directory structure for BCLs `bcl.dir`
+#### [Directory structure for BCLs](#bcl-dir-section)
+ `bcl.dir`
 ```bash
 ├── 210122_MN01371_0034_A000H3F7MF
 │   ├── Config
@@ -125,5 +134,8 @@ each sequencing run contains an entry like this
     ├── T72_200170974.json
     └── Thumbnail_Images
 ```
+
+### Additional Background
+see [medrxiv preprint](https://www.medrxiv.org/content/10.1101/2020.08.04.20167874v2) and [Octant Notion SwabSeq page](https://www.notion.so/Octant-SwabSeq-Testing-9eb80e793d7e46348038aa80a5a901fd) for information about technology and licensing
 
 
