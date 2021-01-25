@@ -55,12 +55,15 @@ has been generated (this is an html report for each sequencing run)
 
 ___
 
-The most common intervention is to set the following for a run
+The most common intervention is to set the following for a run, note the space between the colon and the lowercase yes/no:
+
 ```yaml
  Analyzed: no
  Reported: no
 ```
-If the csv keyfile in swabseqsampletracking/ is updated after a run finishes, or if orders in pre
+
+Set this if the csv keyfile in swabseqsampletracking/ is updated after a run finishes (for example, for quadrant nullification or rotation), or if orders in precisemdx_sftp_orders/ 
+updates after a run finishes and you need to generate the csv results files for preciseQ import.
 
 
 ### Directory Structures
