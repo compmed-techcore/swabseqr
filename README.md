@@ -18,6 +18,43 @@ The `bs` CLI config file in ~/.basespace/default.cfg should be setup and workspa
 ### Usage
 see [main.R](examples/main.R) for example usage
 
+
+#### `seq/config.yaml` monitors and controls state of the processing pipeline
+
+each sequencing run contains an entry like this
+
+```yaml
+210122_NB552456_0043_AHM5M5AFX2:
+     Analyzed: yes
+     Bcl2fastq: yes
+     Demuxed: yes
+     Downloaded: yes
+     Flowcell: HM5M5AFX2
+     Hname: T72
+     ID: '200170974'
+     Reported: yes
+     Status: Complete
+     Experiment: 01222021_JC_AM_N_1
+     Keyfile: 01222021_JC_AM_N_1.csv
+```
+The following entries can be modifed to control pipeline state:
+
+* `Downloaded: (yes/no)` tracks/controls whether a sequencing run has been downloaded from Illumnia Basespace CLI `bs` to bcls/ see bcl.dir below
+
+* `Bcl2fastq: (yes/no)` tracks/controls whether `bcl2fastq` has been run to generate Undetermined.*.fastq.gz files for each run in bcls/${Name}/out/
+
+* `Demumxed: (yes/no)` tracks/controls whether amplicon and index matching has been performed. Note this step depends only on the expected molecular barcodes and can run without sample matrix tube information. 
+
+* `Analyzed: (yes/no)` tracks/controls whether seq/results/${Experiment}_report.csv has been generated 
+(this file merges swabseq results with order IDs) and whether seq/results/${Experiment}.html 
+has been generated (this is an html report for each sequencing run)
+
+* `Reported: (yes/no)` tracks/controls whether csv files per ordering institute and inconclusives/postitives to pull, the file tracking missing orders 
+(orders in preciseQ but not received by the lab) are updated at missing/${Date}_orders_not_accession.csv, and the file tracking completed orders are updated at completed/${Date}_current_results.csv
+
+
+
+
 ### Directory Structures
 
 #### Remote directory structure for shared drive: `remote.dir`
@@ -50,33 +87,8 @@ see [main.R](examples/main.R) for example usage
 │       └── uploaded
 └── test
 ```
-#### `seq/config.yaml` monitors and controls state of the processing pipeline
-each sequencing run contains an entry like this
-```yaml
-210122_NB552456_0043_AHM5M5AFX2:
-     Analyzed: yes
-     Bcl2fastq: yes
-     Demuxed: yes
-     Downloaded: yes
-     Flowcell: HM5M5AFX2
-     Hname: T72
-     ID: '200170974'
-     Reported: yes
-     Status: Complete
-     Experiment: 01222021_JC_AM_N_1
-     Keyfile: 01222021_JC_AM_N_1.csv
-```
-
-* `Downloaded: yes/no` tracks whether a sequencing run has been downloaded from Illumnia Basespace CLI `bs` to bcls/ see [bcl.dir](https://github.com/joshsbloom/swabseqr#bcl-dir-section)
-
-* `Bcl2fastq yes/no` tracks whether `bcl2fastq` has been run to generate Undetermined.*.fastq.gz files for 
-
-* 
 
 
-* `Analyzed: yes/no` tracks whether seq/results/${Experiment}_report.csv has been generated 
-(this file merges swabseq results with order IDs) and whether seq/results/${Experiment}.html 
-has been generated (this is an html report for each sequencing run)
 
   
 
@@ -85,7 +97,7 @@ has been generated (this is an html report for each sequencing run)
 
 
 
-#### [Directory structure for BCLs](#bcl-dir-section)
+#### Directory structure for BCLs
  `bcl.dir`
 ```bash
 ├── 210122_MN01371_0034_A000H3F7MF
