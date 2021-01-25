@@ -60,6 +60,7 @@ The most common intervention is to set the following for a run
  Analyzed: no
  Reported: no
 ```
+If the csv keyfile in swabseqsampletracking/ is updated after a run finishes, or if orders in pre
 
 
 ### Directory Structures
