@@ -25,7 +25,6 @@ see [medrxiv preprint](https://www.medrxiv.org/content/10.1101/2020.08.04.201678
 
 #### Remote directory structure for shared drive: `remote.dir`
 ```bash
-.
 ├── completed
 │   ├── 2021-01-22_current_results.csv
 │   ├── 2021-01-23_current_results.csv
@@ -47,7 +46,6 @@ see [medrxiv preprint](https://www.medrxiv.org/content/10.1101/2020.08.04.201678
 ├── rosemaryDir
 ├── seq
 │   ├── config.yaml
-│   ├── config.yaml.backup_210120
 │   ├── runs
 │   └── water_tubes
 ├── swabseqsampletracking
@@ -88,7 +86,6 @@ see [medrxiv preprint](https://www.medrxiv.org/content/10.1101/2020.08.04.201678
 
 #### Directory structure for BCLs `bcl.dir`
 ```bash
-.
 ├── 210122_MN01371_0034_A000H3F7MF
 │   ├── Config
 │   ├── Data
