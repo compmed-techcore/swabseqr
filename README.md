@@ -67,7 +67,7 @@ each sequencing run contains an entry like this
      Keyfile: 01222021_JC_AM_N_1.csv
 ```
 
-* `Downloaded: yes/no` tracks whether a sequencing run has been downloaded from Illumnia Basespace CLI `bs` to bcls/ see (#bcl-dir-section)
+* `Downloaded: yes/no` tracks whether a sequencing run has been downloaded from Illumnia Basespace CLI `bs` to bcls/ see [#bcl-dir-section]
 
 * `Bcl2fastq yes/no` tracks whether `bcl2fastq` has been run to generate Undetermined.*.fastq.gz files for 
 
