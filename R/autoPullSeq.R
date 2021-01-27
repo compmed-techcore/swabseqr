@@ -5,7 +5,7 @@
 #' @param check.basespace.interval seconds before checking basespace to see if a run has updated
 #'
 #' @export
-autoRun=function(check.yaml.interval=30, check.basespace.interval=600, syncToShared=T, writeCurrentResultsTable=F){
+autoRun=function(check.yaml.interval=30, check.basespace.interval=600, syncToShared=T, writeCurrentResultsTable=T){
     if(!exists("cfg")) { print('please run buildEnvironment() before autoRun()'); return(NULL)}
 
     if(!file.exists(cfg$yaml.cfg.file))  {

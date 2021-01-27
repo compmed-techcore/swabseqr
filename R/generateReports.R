@@ -249,6 +249,7 @@ buildResultsList=function(rTable, r, odir,cfg){
          samples_with_ids=!(dwide$Barcode%in% cfg$coreVars$empty_well_set | is.na(dwide$Barcode))
          # samples to report have matrix tube IDs and aren't in set of tubes scanned as water tubes
          samples_to_report= !(dwide$Barcode%in% cfg$coreVars$empty_well_set | is.na(dwide$Barcode) | (dwide$Barcode %in% loo.key$ID) )
+         dwide=dwide%>%tibble::add_column(matrix_tube_present=samples_with_ids, .after='id_tubes')
 
          params <- list(
                   experiment = paste(rTable$Experiment[r], rTable$Hname[r]), 

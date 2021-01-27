@@ -93,7 +93,7 @@ ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=log10(Count))) +
 ## Tube locations (384)
 ```{r echo=FALSE, fig.height=10, fig.width=12}
 params$dwide %>% 
-ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=params$samples_with_ids)) + 
+ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=matrix_tube_present)) + 
   ggplot2::geom_raster() +
   ggplot2::coord_equal() +
   ggplot2::facet_grid(~Plate_384+Plate_ID) +
@@ -145,6 +145,20 @@ lapply(psplit, function(x) {
   ggplot2::coord_equal() +
   ggplot2::facet_grid(amplicon~Plate_384+Plate_ID+quadrant_96) +
   ggplot2::scale_fill_viridis_c(option = 'plasma')+ggplot2::ggtitle(params$experiment)
+})
+```
+
+## Tube locations (96)
+```{r echo=FALSE, fig.height=10, fig.width=12}
+psplit=split(params$dwide, params$dwide$Plate_384)
+lapply(psplit, function(x) {
+           x%>%
+ggplot2::ggplot(ggplot2::aes(x=Col96, y=Row96, fill=matrix_tube_present)) + 
+  ggplot2::geom_raster() +
+  ggplot2::coord_equal() +
+  ggplot2::facet_grid(~Plate_384+Plate_ID+quadrant_96) +
+  #scale_fill_viridis_c(option = 'plasma')+
+  ggplot2::ggtitle(params$experiment)
 })
 ```
 
