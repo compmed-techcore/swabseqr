@@ -25,6 +25,7 @@ addIdentifiers=function(...) {
                  orders.files=getOrders(cfg)
                  cur.date=format(Sys.Date(), format="%m%d%Y")
                  results.list$dwide %>% dplyr::filter(results.list$samples_to_report)  %>%
+                                    dplyr::filter(-matrix_tube_present) %>%
                                     tibble::add_column(date_analyzed=cur.date, .before="S2")  %>% 
                                     tibble::add_column(sequencingRunName=rTable$Name[r], .before="Sample_ID") %>%
                                     tibble::add_column(experimentName=rTable$Experiment[r], .before="Sample_ID") %>%
