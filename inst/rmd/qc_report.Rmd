@@ -90,6 +90,18 @@ ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=log10(Count))) +
   ggplot2::scale_fill_viridis_c(option = 'plasma')+ggplot2::ggtitle(params$experiment)
 ```
 
+## Tube locations (384)
+```{r echo=FALSE, fig.height=10, fig.width=12}
+params$dwide %>% 
+ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=params$samples_with_ids)) + 
+  ggplot2::geom_raster() +
+  ggplot2::coord_equal() +
+  ggplot2::facet_grid(~Plate_384+Plate_ID) +
+  #scale_fill_viridis_c(option = 'plasma')+
+  ggplot2::ggtitle(params$experiment)
+```
+
+
 ## Swabseq Calls (384)
 ```{r echo=FALSE, fig.height=10, fig.width=12}
 params$dwide %>% 
