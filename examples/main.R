@@ -3,12 +3,10 @@ devtools::check()
 devtools::document()
 devtools::load_all()
 devtools::install()
-
 library(swabseqr)
 
 # basedir.dir is path to github directory
 #basedir.dir=Sys.getenv("BASEDIR")
-
 basedir.dir='/data/Covid/swabseq2/'
 # location of shared drive
 remote.dir=paste0(basedir.dir, 'remote/')
@@ -31,14 +29,11 @@ cfg = buildEnvironment(remote.dir,
 #default usage
 autoRun()
 
-
 #if you don't want it to update completed/
 autoRun(writeCurrentResultsTable=F)
 
-
 #first run
 #syncRuns(cfg, first.run=T)
-
 
 print('syncing config.yaml')
 syncRuns()
@@ -69,16 +64,11 @@ syncReports( syncToShared=F)
 #library(swabseqr)
 #autoRun()
 setwd("/data/Covid/swabseqr")
-devtools::document()
-devtools::load_all()
-devtools::install()
-
 
 
 
 #depends
 library(rqdatatable)
-
 #imports
 library(tools)
 library(data.table)
@@ -89,7 +79,6 @@ library(yaml)
 library(rquery)
 library(knitr)
 library(DT)
-
 #actual tidyverse packages used 
 #library(tidyverse)
 library(tidyr)
@@ -99,11 +88,9 @@ library(tibble)
 library(readr)
 library(rmarkdown)
 library(ggplot2)
-
 #Bioconductor packages
 library(ShortRead)
 library(savR)
-
 #suggests
 library(fastqcr)
 library(devtools)
