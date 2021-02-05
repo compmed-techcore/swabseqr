@@ -23,6 +23,8 @@ addIdentifiers=function(...) {
                         envir = new.env(parent = globalenv())
                  )
                  orders.files=getOrders(cfg)
+                 #patch to make all barcodes uppercase
+                 orders.files$Barcode=toupper(as.character(orders.files$Barcode))
                  cur.date=format(Sys.Date(), format="%m%d%Y")
                  results.list$dwide %>% dplyr::filter(results.list$samples_to_report)  %>%
                                     dplyr::select(-matrix_tube_present) %>%
