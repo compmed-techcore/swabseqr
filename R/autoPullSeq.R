@@ -100,19 +100,24 @@ bcl2fastqRuns=function(...) {
             
             if(file.exists(paste0(bcl.dir, 'RTAComplete.txt')) & file.exists(paste0(bcl.dir, 'RTARead3Complete.txt')) ) { 
                 setwd(bcl.dir)
+                #run bcl2fastq even if fastq.gz file exists 
                 # if fastqs don't exist run bcl2fastq to generate them 
                 fastqR1  <- paste0(bcl.dir, 'out/Undetermined_S0_R1_001.fastq.gz')
-                status=0
-                if(!file.exists(fastqR1)) { 
+
+                # handle random annoying bcl2fastq file descriptor error and segfaults 
+                # if status returned is not 0 then keep re-running bcl2fastq until it is
+                status=139
+                while(!identical(status,character(0)) ) {
+                #if(!file.exists(fastqR1)) { 
                     # run bcl2fastq to generate fastq.gz files (no demux is happening here)
                     #note, reduce threads if necessary
                     status=system(paste("bcl2fastq --runfolder-dir . --output-dir out/ --create-fastq-for-index-reads  --ignore-missing-bcl --use-bases-mask=Y26,I10,I10 --processing-threads",
                                  cfg$coreVars$threads,
-                                 "--no-lane-splitting --sample-sheet /dev/null"))
+                                 "--no-lane-splitting --sample-sheet /dev/null"), intern=T)
                     if(cfg$coreVars$fastqc) {fastqcr::fastqc(fq.dir=paste0(bcl.dir, 'out/'), qc.dir=paste0(odir, '/'), threads=3) }
-
                 }
-                if(file.exists(fastqR1) & status==0){
+                #}
+                if(file.exists(fastqR1) & identical(status,character(0)) ){
                     system(paste0('cp ',  bcl.dir, 'RunParameters.xml', ' ', odir))
                     system(paste0('cp ',  bcl.dir, 'RunInfo.xml', ' ', odir))
                     system(paste0('cp -R ',  bcl.dir, 'InterOp/', ' ', odir))
