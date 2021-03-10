@@ -124,6 +124,10 @@ syncReports=function(..., syncToShared=T, writeCurrentResultsTable=F) {
 
             # output information on positives/negatives for upload to preciseQ
             results.split=results%>% dplyr::select("Barcode","result","orders_file","Organization","Department","Population","Collection date+time")
+            #added 3/10/21 for new 
+            results.split$status='Received'
+            results.split = results.split %>% dplyr::relocate(status, .after=result)
+            # ---
             results.split=split(results.split, results$Organization)
             for(n in names(results.split)){
                  #results that aren't inconclusive
