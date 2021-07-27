@@ -88,7 +88,7 @@ buildEnvironment=function( remote.dir, localmirror.dir, bcl.dir,
 #' This function is called by buildEnvironment() and sets key analysis parameters, exposed here for user overwriting.
 #'
 #' @export
-setAnalysisVariables=function(versi=2, diversifiedSpike=T,lbuffer=30000000, readerBlockSize=1e8, threads=8,fastqcr=F){
+setAnalysisVariables=function(versi=3, diversifiedSpike=T,lbuffer=30000000, readerBlockSize=1e8, threads=8,fastqcr=F){
     if(versi==1) {
         flagLowPositive=F
         diversifiedSpike=F
@@ -103,6 +103,14 @@ setAnalysisVariables=function(versi=2, diversifiedSpike=T,lbuffer=30000000, read
         Rpp=10
         Ratio=0.05 #was 0.03
     }
+    if(versi==3){
+        flagLowPositive=F
+        diversifiedSpike=T
+        Stotal=500
+        Rpp=10
+        Ratio=0.1 #was 0.03
+    }
+
     if(diversifiedSpike) {
         amplicons=list(
             S2=         'TATCTTCAACCTAGGACTTTTCTATT',
