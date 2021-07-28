@@ -103,34 +103,36 @@ syncReports=function(..., syncToShared=T, writeCurrentResultsTable=F) {
                 dplyr::distinct()
             
             #07/27/21 
-            #prevLowPos=currResults %>% 
-            #    dplyr::left_join(seqStartTimes, by='sequencingRunName') %>% 
-            #    dplyr::filter(sequencingRunStartTime<currRunStartTime) %>% 
-            #    dplyr::filter(result=='Positive' & (S2_normalized_to_S2_spike>.1 & S2_normalized_to_S2_spike<cfg$coreVars$Ratio)))%>%dplyr::select(Barcode) %>% 
-            #    dplyr::distinct()
+            #barcodes of previous low positives 
+            prevLowPos=currResults %>% 
+                dplyr::left_join(seqStartTimes, by='sequencingRunName') %>% 
+                dplyr::filter(sequencingRunStartTime<currRunStartTime) %>% 
+                dplyr::filter(result=='Positive' & (S2_normalized_to_S2_spike>cfg$coreVars$Ratio & S2_normalized_to_S2_spike<0.5))%>%dplyr::select(Barcode) %>% 
+                dplyr::distinct()
        
             #07/27/21
-            #results = results %>% dplyr::mutate(currLowPos=!(Barcode %in% prevLowPos$Barcode) & (S2_normalized_to_S2_spike>.1 & S2_normalized_to_S2_spike<cfg$coreVars$Ratio) )
+            results = results %>% dplyr::mutate(currLowPos=!(Barcode %in% prevLowPos$Barcode) & (S2_normalized_to_S2_spike>cfg$coreVars$Ratio & S2_normalized_to_S2_spike<0.5) )
 
             # output the inconclusives that have only occurred once and should be rerun 
+            # 07/27/21 or the current low positives 
+
             fo=paste0(odir,'/results/', rTable$Experiment[r],'_please_pull_inconclusives.csv')
             if(file.exists(fo)){file.remove(fo)}
             #07/27/21
             #dplyr::filter(result=='Inconclusive' | currLowPos) 
-            results %>% dplyr::filter(result=='Inconclusive') %>% 
+            results %>% dplyr::filter(result=='Inconclusive'| currLowPos ) %>% 
                         dplyr::filter(!(Barcode %in% prevInconclusives$Barcode)) %>%
                         dplyr::select("Barcode","result","S2_normalized_to_S2_spike", "Plate_384","Plate_96_BC","quadrant_96","Pos96","orders_file","Organization","Department","Population","Collection date+time") %>%
                         dplyr::arrange(Plate_384, quadrant_96, Pos96) %>%
                         utils::write.csv(fo, row.names=F)
 
             # output the positives for a run 
-            # if current inconclusive or  (S2_normalized_to_S2_spike>.1 & S2_normalized_to_S2_spike<cfg$coreVars$Ratio)) and not previous inconclusive report inconclusive 
             fo=paste0(odir,'/results/', rTable$Experiment[r],'_positives.csv')
             if(file.exists(fo)){file.remove(fo)}
             
             #07/27/21
             # dplyr::filter(result=='Positive' & !currLowPos) 
-            results %>% dplyr::filter(result=='Positive') %>% 
+            results %>% dplyr::filter(result=='Positive' & !currLowPos ) %>% 
                     dplyr::select("Barcode","result","S2_normalized_to_S2_spike","Plate_384","Plate_96_BC","quadrant_96","Pos96","orders_file","Organization","Department","Population","Collection date+time") %>%
                     dplyr::arrange(Plate_384, quadrant_96, Pos96) %>%
                     utils::write.csv(fo, row.names=F)
@@ -152,7 +154,7 @@ syncReports=function(..., syncToShared=T, writeCurrentResultsTable=F) {
                  
                  #07/27/21
                  #dplyr::filter(result!='Inconclusive' & !currLowPos) 
-                 results.split[[n]] %>% dplyr::filter(result!='Inconclusive') %>% 
+                 results.split[[n]] %>% dplyr::filter(result!='Inconclusive' & !currLowPos ) %>% 
                      dplyr::arrange(orders_file, Barcode) %>% dplyr::distinct() %>% utils::write.csv(fo, row.names=F)
                 
                  #results that are inconclusive and were inconclusive for a previous run
@@ -161,7 +163,7 @@ syncReports=function(..., syncToShared=T, writeCurrentResultsTable=F) {
                
                  #07/27/21
                  #dplyr::filter(Barcode %in% prevInconclusives$Barcode | Barcode %in% prevLowPos$Barcode  )
-                 results.split[[n]] %>%  dplyr::filter(result=='Inconclusive') %>% dplyr::filter(Barcode %in% prevInconclusives$Barcode) %>%
+                 results.split[[n]] %>%  dplyr::filter(result=='Inconclusive') %>% dplyr::filter((Barcode %in% prevInconclusives$Barcode) | (Barcode %in% prevLowPos$Barcode) ) %>%
                      dplyr::arrange(orders_file, Barcode) %>% dplyr::distinct() %>% utils::write.csv(fo, row.names=F)
         }
 
