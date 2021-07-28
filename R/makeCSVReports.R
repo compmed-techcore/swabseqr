@@ -111,7 +111,7 @@ syncReports=function(..., syncToShared=T, writeCurrentResultsTable=F) {
                 dplyr::distinct()
        
             #07/27/21
-            results = results %>% dplyr::mutate(currLowPos=!(Barcode %in% prevLowPos$Barcode) & (S2_normalized_to_S2_spike>cfg$coreVars$Ratio & S2_normalized_to_S2_spike<0.5) )
+            results$currLowPos = !(results$Barcode %in% prevLowPos$Barcode) & (results$S2_normalized_to_S2_spike>cfg$coreVars$Ratio & results$S2_normalized_to_S2_spike<0.5) 
 
             # output the inconclusives that have only occurred once and should be rerun 
             # 07/27/21 or the current low positives 
