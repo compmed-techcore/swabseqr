@@ -111,7 +111,7 @@ syncReports=function(..., syncToShared=T, writeCurrentResultsTable=F) {
                 dplyr::distinct()
        
             #07/27/21
-            results$currLowPos = !(results$Barcode %in% prevLowPos$Barcode) & (results$S2_normalized_to_S2_spike>cfg$coreVars$Ratio & results$S2_normalized_to_S2_spike<0.5) 
+            results = results %>% dplyr::mutate(currLowPos=!(Barcode %in% prevLowPos$Barcode) & (S2_normalized_to_S2_spike>cfg$coreVars$Ratio & S2_normalized_to_S2_spike<0.5) )
 
             # output the inconclusives that have only occurred once and should be rerun 
             # 07/27/21 or the current low positives 
@@ -141,7 +141,7 @@ syncReports=function(..., syncToShared=T, writeCurrentResultsTable=F) {
             dir.create(paste0(odir,'/results/abbrev/'))
 
             # output information on positives/negatives for upload to preciseQ
-            results.split=results%>% dplyr::select("Barcode","result","orders_file","Organization","Department","Population","Collection date+time")
+            results.split=results%>% dplyr::select("Barcode","result","currLowPos", "orders_file","Organization","Department","Population","Collection date+time")
             #added 3/10/21 for new 
             results.split$status='Received'
             results.split = results.split %>% dplyr::relocate(status, .after=result)
@@ -154,7 +154,7 @@ syncReports=function(..., syncToShared=T, writeCurrentResultsTable=F) {
                  
                  #07/27/21
                  #dplyr::filter(result!='Inconclusive' & !currLowPos) 
-                 results.split[[n]] %>% dplyr::filter(result!='Inconclusive' & !currLowPos ) %>% 
+                 results.split[[n]] %>% dplyr::filter(result!='Inconclusive' & !currLowPos ) %>% dplyr::select(-currLowPos) %>%
                      dplyr::arrange(orders_file, Barcode) %>% dplyr::distinct() %>% utils::write.csv(fo, row.names=F)
                 
                  #results that are inconclusive and were inconclusive for a previous run
@@ -163,7 +163,7 @@ syncReports=function(..., syncToShared=T, writeCurrentResultsTable=F) {
                
                  #07/27/21
                  #dplyr::filter(Barcode %in% prevInconclusives$Barcode | Barcode %in% prevLowPos$Barcode  )
-                 results.split[[n]] %>%  dplyr::filter(result=='Inconclusive') %>% dplyr::filter((Barcode %in% prevInconclusives$Barcode) | (Barcode %in% prevLowPos$Barcode) ) %>%
+                 results.split[[n]] %>%  dplyr::filter(result=='Inconclusive') %>% dplyr::filter((Barcode %in% prevInconclusives$Barcode) | (Barcode %in% prevLowPos$Barcode) ) %>% dplyr::select(-currLowPos) %>%
                      dplyr::arrange(orders_file, Barcode) %>% dplyr::distinct() %>% utils::write.csv(fo, row.names=F)
         }
 
