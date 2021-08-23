@@ -21,7 +21,9 @@ getPrevResults=function(..., inconclusive_rate_for_failed_run=0.5) {
     #get previous runs within the last 2 weeks
     run.samples=run.samples[abs(edates-Sys.Date())<14]
     
-    r.files.entries=lapply(run.samples,readr::read_csv, col_types=readr::cols())
+    #08/22/21 fix issue with report auto type detection
+    r.files.entries=lapply(run.samples,readr::read_csv, col_types="cccddcccccccccccccccclcdddddddddlcccccc")
+                           #readr::cols())
     r.files=data.table::rbindlist(r.files.entries)
     #r.files=r.files[,-1]
     r.files=r.files %>% dplyr::distinct() # %>% filter(experiment!='experiment')
