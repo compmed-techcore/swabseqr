@@ -82,19 +82,19 @@ results.summary %>%
 
 ## Plate maps (384)
 ```{r echo=FALSE, fig.height=10, fig.width=12}
-params$dlong$IndexSet=params$dlong$Plate_ID
-params$dlong$IndexSet[params$dlong$IndexSet %in% c('Plate1', 'Plate2', 'Plate3', 'Plate4')]='Winter'
-params$dlong$IndexSet[params$dlong$IndexSet %in% c('Plate5', 'Plate6', 'Plate7', 'Plate8')]='Spring'
-params$dlong$IndexSet[params$dlong$IndexSet %in% c('Plate9', 'Plate10', 'Plate11', 'Plate12') ]='Summer'
-params$dlong$IndexSet[params$dlong$IndexSet %in% c('Plate13', 'Plate14', 'Plate15', 'Plate16')]='Fall'
+IndexSet=params$dlong$Plate_ID
+IndexSet[params$dlong$IndexSet %in% c('Plate1', 'Plate2', 'Plate3', 'Plate4')]='Winter'
+IndexSet[params$dlong$IndexSet %in% c('Plate5', 'Plate6', 'Plate7', 'Plate8')]='Spring'
+IndexSet[params$dlong$IndexSet %in% c('Plate9', 'Plate10', 'Plate11', 'Plate12') ]='Summer'
+IndexSet[params$dlong$IndexSet %in% c('Plate13', 'Plate14', 'Plate15', 'Plate16')]='Fall'
 
-params$dwide$IndexSet=params$dwide$Plate_ID
-params$dwide$IndexSet[params$dwide$IndexSet %in% c('Plate1', 'Plate2', 'Plate3', 'Plate4')]='Winter'
-params$dwide$IndexSet[params$dwide$IndexSet %in% c('Plate5', 'Plate6', 'Plate7', 'Plate8')]='Spring'
-params$dwide$IndexSet[params$dwide$IndexSet %in% c('Plate9', 'Plate10', 'Plate11', 'Plate12') ]='Summer'
-params$dwide$IndexSet[params$dwide$IndexSet %in% c('Plate13', 'Plate14', 'Plate15', 'Plate16')]='Fall'
+IndexSetW=params$dwide$Plate_ID
+IndexSetW[params$dwide$IndexSet %in% c('Plate1', 'Plate2', 'Plate3', 'Plate4')]='Winter'
+IndexSetW[params$dwide$IndexSet %in% c('Plate5', 'Plate6', 'Plate7', 'Plate8')]='Spring'
+IndexSetW[params$dwide$IndexSet %in% c('Plate9', 'Plate10', 'Plate11', 'Plate12') ]='Summer'
+IndexSetW[params$dwide$IndexSet %in% c('Plate13', 'Plate14', 'Plate15', 'Plate16')]='Fall'
 
-psplit=split(params$dlong, params$dlong$IndexSet)
+psplit=split(params$dlong, IndexSet)
 lapply(psplit, function(x) {
            x%>%
 #params$dlong %>%  
@@ -108,7 +108,7 @@ ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=log10(Count))) +
 
 ## Tube locations (384)
 ```{r echo=FALSE, fig.height=10, fig.width=12}
-psplit=split(params$dwide, params$dwide$IndexSet)
+psplit=split(params$dwide, IndexSetW)
 lapply(psplit, function(x) {
            x%>%
 #params$dwide %>% 
@@ -124,7 +124,7 @@ ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=matrix_tube_present)) +
 
 ## Swabseq Calls (384)
 ```{r echo=FALSE, fig.height=10, fig.width=12}
-psplit=split(params$dwide, params$dwide$IndexSet)
+psplit=split(params$dwide, IndexSetW)
 lapply(psplit, function(x) {
            x%>%
 #params$dwide %>% 
@@ -139,7 +139,7 @@ ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=result)) +
 
 ## S2 and S2 spike QC (384)
 ```{r echo=FALSE, fig.height=10, fig.width=12}
-psplit=split(params$dwide, params$dwide$IndexSet)
+psplit=split(params$dwide,IndexSetW)
 lapply(psplit, function(x) {
            x%>%
 #params$dwide %>% 
@@ -153,7 +153,7 @@ ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=Stotal>cfg$coreVars$Stotal)) +
 
 ## RPP30 QC (384)
 ```{r echo=FALSE, fig.height=10, fig.width=12}
-psplit=split(params$dwide, params$dwide$IndexSet)
+psplit=split(params$dwide, IndexSetW)
 lapply(psplit, function(x) {
            x%>%
 #params$dwide %>% 
