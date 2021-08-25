@@ -37,23 +37,65 @@ generateExpectedIndices=function(diri) {
     i5RC.toggle=TRUE
     if(chemistry=="MiniSeq Rapid High" | chemistry=="MiSeq") {i5RC.toggle=F} 
 
-    # setup indices -----------------------------------------------------
+    ## for 1536 UDI setup ----------------------------------------------------
+    #i7s=plater::read_plates(cfg$i7_plate_key_file, well_ids_column="Sample_Well")
+    #i7s=tidyr::gather(i7s, Plate_ID, index, 3:ncol(i7s))
+    #i7s$index=as.vector(sapply(i7s$index, revcomp))
+    #i7s$Plate_ID=paste0('Plate', i7s$Plate_ID)
+    #i7s$Sample_ID=paste0(i7s$Plate_ID,'-', i7s$Sample_Well)
+
+    #i5s=plater::read_plates(cfg$i5_plate_key_file, well_ids_column="Sample_Well")
+    #i5s=tidyr::gather(i5s, Plate_ID, index2, 3:ncol(i5s))
+    #if(i5RC.toggle) { i5s$index2=as.vector(sapply(i5s$index2, revcomp)) }
+    #i5s$Plate_ID=paste0('Plate', i5s$Plate_ID)
+    #i5s$Sample_ID=paste0(i5s$Plate_ID,'-', i5s$Sample_Well)
+
+    #i5s= i5s %>% dplyr::select(Sample_ID, index2)
+    #######i7s$bc_set='N1_S2_RPP30'
+    #index.key=dplyr::right_join(i7s,i5s,by='Sample_ID') %>% dplyr::select(-Plate) %>% dplyr::select(Plate_ID,Sample_Well,Sample_ID,index,index2)
+    #return(index.key)
+    ## -----------------------------------------------------------------------------
+
+
+    ## for 6144 semi-UDI setup ----------------------------------------------------
     i7s=plater::read_plates(cfg$i7_plate_key_file, well_ids_column="Sample_Well")
     i7s=tidyr::gather(i7s, Plate_ID, index, 3:ncol(i7s))
-    i7s$index=as.vector(sapply(i7s$index, revcomp))
-    i7s$Plate_ID=paste0('Plate', i7s$Plate_ID)
-    i7s$Sample_ID=paste0(i7s$Plate_ID,'-', i7s$Sample_Well)
-
+   
     i5s=plater::read_plates(cfg$i5_plate_key_file, well_ids_column="Sample_Well")
     i5s=tidyr::gather(i5s, Plate_ID, index2, 3:ncol(i5s))
-    if(i5RC.toggle) { i5s$index2=as.vector(sapply(i5s$index2, revcomp)) }
-    i5s$Plate_ID=paste0('Plate', i5s$Plate_ID)
-    i5s$Sample_ID=paste0(i5s$Plate_ID,'-', i5s$Sample_Well)
+  
 
-    i5s= i5s %>% dplyr::select(Sample_ID, index2)
+    #r=i7
+    #f=i5
+    semi.key.i7=c(c(1,2,3,4),c(2,3,4,1),c(3,4,1,2), c(4,1,2,3))
+    semi.key.i5=rep(seq(1,4),4)
+
+    i7ss=split(i7s, i7s$Plate_ID)
+    i5ss=split(i5s, i5s$Plate_ID)
+
+
+    i7ss=data.table::rbindlist(i7ss[semi.key.i7])
+    i5ss=data.table::rbindlist(i5ss[semi.key.i5])
+    
+    i7ss$Plate_ID=rep(seq(1,16),each=384)
+    i5ss$Plate_ID=rep(seq(1,16),each=384)
+
+    i7ss$Plate_ID=paste0('Plate', i7ss$Plate_ID)
+    i7ss$Sample_ID=paste0(i7ss$Plate_ID,'-', i7ss$Sample_Well)
+    i7ss$index=as.vector(sapply(i7ss$index, revcomp))
+
+
+    i5ss$Plate_ID=paste0('Plate', i5ss$Plate_ID)
+    i5ss$Sample_ID=paste0(i5ss$Plate_ID,'-', i5ss$Sample_Well)
+    if(i5RC.toggle) { i5ss$index2=as.vector(sapply(i5ss$index2, revcomp)) }
+
+
+    i5ss= i5ss %>% dplyr::select(Sample_ID, index2)
     #i7s$bc_set='N1_S2_RPP30'
-    index.key=dplyr::right_join(i7s,i5s,by='Sample_ID') %>% dplyr::select(-Plate) %>% dplyr::select(Plate_ID,Sample_Well,Sample_ID,index,index2)
-    return(index.key)
+    index.key=dplyr::right_join(i7ss,i5ss,by='Sample_ID') %>% dplyr::select(-Plate) %>% dplyr::select(Plate_ID,Sample_Well,Sample_ID,index,index2)
+    ## -------------------------------------------------------------------
+
+
 }
 
 make_hamming1_sequences=function(x) {
