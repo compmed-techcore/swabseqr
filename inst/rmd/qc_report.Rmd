@@ -82,57 +82,88 @@ results.summary %>%
 
 ## Plate maps (384)
 ```{r echo=FALSE, fig.height=10, fig.width=12}
-params$dlong %>%  
+params$dlong$IndexSet=params$dlong$Plate_ID
+params$dlong$IndexSet[params$dlong$IndexSet %in% c('Plate1', 'Plate2', 'Plate3', 'Plate4')]='Winter'
+params$dlong$IndexSet[params$dlong$IndexSet %in% c('Plate5', 'Plate6', 'Plate7', 'Plate8')]='Spring'
+params$dlong$IndexSet[params$dlong$IndexSet %in% c('Plate9', 'Plate10', 'Plate11', 'Plate12') ]='Summer'
+params$dlong$IndexSet[params$dlong$IndexSet %in% c('Plate13', 'Plate14', 'Plate15', 'Plate16')]='Fall'
+
+params$dwide$IndexSet=params$dwide$Plate_ID
+params$dwide$IndexSet[params$dwide$IndexSet %in% c('Plate1', 'Plate2', 'Plate3', 'Plate4')]='Winter'
+params$dwide$IndexSet[params$dwide$IndexSet %in% c('Plate5', 'Plate6', 'Plate7', 'Plate8')]='Spring'
+params$dwide$IndexSet[params$dwide$IndexSet %in% c('Plate9', 'Plate10', 'Plate11', 'Plate12') ]='Summer'
+params$dwide$IndexSet[params$dwide$IndexSet %in% c('Plate13', 'Plate14', 'Plate15', 'Plate16')]='Fall'
+
+psplit=split(params$dlong, params$dlong$IndexSet)
+lapply(psplit, function(x) {
+           x%>%
+#params$dlong %>%  
 ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=log10(Count))) + 
   ggplot2::geom_raster() +
   ggplot2::coord_equal() +
   ggplot2::facet_grid(amplicon~Plate_384+Plate_ID) +
   ggplot2::scale_fill_viridis_c(option = 'plasma')+ggplot2::ggtitle(params$experiment)
+    })
 ```
 
 ## Tube locations (384)
 ```{r echo=FALSE, fig.height=10, fig.width=12}
-params$dwide %>% 
+psplit=split(params$dwide, params$dwide$IndexSet)
+lapply(psplit, function(x) {
+           x%>%
+#params$dwide %>% 
 ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=matrix_tube_present)) + 
   ggplot2::geom_raster() +
   ggplot2::coord_equal() +
   ggplot2::facet_grid(~Plate_384+Plate_ID) +
   #scale_fill_viridis_c(option = 'plasma')+
   ggplot2::ggtitle(params$experiment)
+    })
 ```
 
 
 ## Swabseq Calls (384)
 ```{r echo=FALSE, fig.height=10, fig.width=12}
-params$dwide %>% 
+psplit=split(params$dwide, params$dwide$IndexSet)
+lapply(psplit, function(x) {
+           x%>%
+#params$dwide %>% 
 ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=result)) + 
   ggplot2::geom_raster() +
   ggplot2::coord_equal() +
   ggplot2::facet_grid(~Plate_384+Plate_ID) +
   #scale_fill_viridis_c(option = 'plasma')+
   ggplot2::ggtitle(params$experiment)
+    })
 ```
 
 ## S2 and S2 spike QC (384)
 ```{r echo=FALSE, fig.height=10, fig.width=12}
-params$dwide %>% 
+psplit=split(params$dwide, params$dwide$IndexSet)
+lapply(psplit, function(x) {
+           x%>%
+#params$dwide %>% 
 ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=Stotal>cfg$coreVars$Stotal)) + 
   ggplot2::geom_raster() +
   ggplot2::coord_equal() +
   ggplot2::facet_grid(~Plate_384+Plate_ID) +
   #scale_fill_viridis_c(option = 'plasma')+
-  ggplot2::ggtitle(params$experiment)
+  ggplot2::ggtitle(params$experiment) })
 ```
 
 ## RPP30 QC (384)
 ```{r echo=FALSE, fig.height=10, fig.width=12}
-params$dwide %>% 
+psplit=split(params$dwide, params$dwide$IndexSet)
+lapply(psplit, function(x) {
+           x%>%
+#params$dwide %>% 
 ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=RPP30_Detected)) + 
   ggplot2::geom_raster() +
   ggplot2::coord_equal() +
   ggplot2::facet_grid(~Plate_384+Plate_ID) +
   #scale_fill_viridis_c(option = 'plasma')+
   ggplot2::ggtitle(params$experiment)
+  })
 ```
 
 ## Plate maps (96)
