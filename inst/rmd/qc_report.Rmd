@@ -34,6 +34,19 @@ chemistry=xmlinfo$Chemistry
 instrument=xmlinfo$ComputerName
 FlowCellInfo=xmlinfo$FlowCellRfidTag
 ReagentKitInfo=xmlinfo$ReagentKitRfidTag
+
+IndexSet=as.character(params$dlong$Plate_ID)
+IndexSet[IndexSet %in% c('Plate1', 'Plate2', 'Plate3', 'Plate4')]='Winter'
+IndexSet[IndexSet %in% c('Plate5', 'Plate6', 'Plate7', 'Plate8')]='Spring'
+IndexSet[IndexSet %in% c('Plate9', 'Plate10', 'Plate11', 'Plate12') ]='Summer'
+IndexSet[IndexSet %in% c('Plate13', 'Plate14', 'Plate15', 'Plate16')]='Fall'
+
+IndexSetW=as.character(params$dwide$Plate_ID)
+IndexSetW[IndexSetW %in% c('Plate1', 'Plate2', 'Plate3', 'Plate4')]='Winter'
+IndexSetW[IndexSetW %in% c('Plate5', 'Plate6', 'Plate7', 'Plate8')]='Spring'
+IndexSetW[IndexSetW %in% c('Plate9', 'Plate10', 'Plate11', 'Plate12') ]='Summer'
+IndexSetW[IndexSetW %in% c('Plate13', 'Plate14', 'Plate15', 'Plate16')]='Fall'
+
 # library(ggpubr)
 ```
 #### `r paste("BCL Directory:",  xmlinfo$RunID)`
@@ -82,17 +95,6 @@ results.summary %>%
 
 ## Plate maps (384)
 ```{r echo=FALSE, fig.height=10, fig.width=12}
-IndexSet=as.character(params$dlong$Plate_ID)
-IndexSet[IndexSet %in% c('Plate1', 'Plate2', 'Plate3', 'Plate4')]='Winter'
-IndexSet[IndexSet %in% c('Plate5', 'Plate6', 'Plate7', 'Plate8')]='Spring'
-IndexSet[IndexSet %in% c('Plate9', 'Plate10', 'Plate11', 'Plate12') ]='Summer'
-IndexSet[IndexSet %in% c('Plate13', 'Plate14', 'Plate15', 'Plate16')]='Fall'
-
-IndexSetW=as.character(params$dwide$Plate_ID)
-IndexSetW[IndexSetW %in% c('Plate1', 'Plate2', 'Plate3', 'Plate4')]='Winter'
-IndexSetW[IndexSetW %in% c('Plate5', 'Plate6', 'Plate7', 'Plate8')]='Spring'
-IndexSetW[IndexSetW %in% c('Plate9', 'Plate10', 'Plate11', 'Plate12') ]='Summer'
-IndexSetW[IndexSetW %in% c('Plate13', 'Plate14', 'Plate15', 'Plate16')]='Fall'
 
 psplit=split(params$dlong, IndexSet)
 lapply(psplit, function(x) {
