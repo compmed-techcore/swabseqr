@@ -41,6 +41,7 @@ IndexSet[IndexSet %in% c('Plate5', 'Plate6', 'Plate7', 'Plate8')]='Spring'
 IndexSet[IndexSet %in% c('Plate9', 'Plate10', 'Plate11', 'Plate12') ]='Summer'
 IndexSet[IndexSet %in% c('Plate13', 'Plate14', 'Plate15', 'Plate16')]='Fall'
 
+
 IndexSetW=as.character(params$dwide$Plate_ID)
 IndexSetW[IndexSetW %in% c('Plate1', 'Plate2', 'Plate3', 'Plate4')]='Winter'
 IndexSetW[IndexSetW %in% c('Plate5', 'Plate6', 'Plate7', 'Plate8')]='Spring'
@@ -97,7 +98,7 @@ results.summary %>%
 ```{r echo=FALSE, fig.height=10, fig.width=12}
 
 psplit=split(params$dlong, IndexSet)
-lapply(psplit, function(x) {
+lapply(psplit[c('Winter','Spring', 'Summer','Fall')], function(x) {
            x%>%
 #params$dlong %>%  
 ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=log10(Count))) + 
@@ -111,7 +112,7 @@ ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=log10(Count))) +
 ## Tube locations (384)
 ```{r echo=FALSE, fig.height=10, fig.width=12}
 psplit=split(params$dwide, IndexSetW)
-lapply(psplit, function(x) {
+lapply(psplit[c('Winter','Spring', 'Summer','Fall')], function(x) {
            x%>%
 #params$dwide %>% 
 ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=matrix_tube_present)) + 
@@ -127,7 +128,7 @@ ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=matrix_tube_present)) +
 ## Swabseq Calls (384)
 ```{r echo=FALSE, fig.height=10, fig.width=12}
 psplit=split(params$dwide, IndexSetW)
-lapply(psplit, function(x) {
+lapply(psplit[c('Winter','Spring', 'Summer','Fall')], function(x) {
            x%>%
 #params$dwide %>% 
 ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=result)) + 
@@ -142,7 +143,7 @@ ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=result)) +
 ## S2 and S2 spike QC (384)
 ```{r echo=FALSE, fig.height=10, fig.width=12}
 psplit=split(params$dwide,IndexSetW)
-lapply(psplit, function(x) {
+lapply(psplit[c('Winter','Spring', 'Summer','Fall')], function(x) {
            x%>%
 #params$dwide %>% 
 ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=Stotal>cfg$coreVars$Stotal)) + 
@@ -156,7 +157,7 @@ ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=Stotal>cfg$coreVars$Stotal)) +
 ## RPP30 QC (384)
 ```{r echo=FALSE, fig.height=10, fig.width=12}
 psplit=split(params$dwide, IndexSetW)
-lapply(psplit, function(x) {
+lapply(psplit[c('Winter','Spring', 'Summer','Fall')], function(x) {
            x%>%
 #params$dwide %>% 
 ggplot2::ggplot(ggplot2::aes(x=Col, y=Row, fill=RPP30_Detected)) + 
