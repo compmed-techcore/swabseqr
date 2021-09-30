@@ -107,7 +107,7 @@ bcl2fastqRuns=function(...) {
                 # handle random annoying bcl2fastq file descriptor error and segfaults 
                 # if status returned is not 0 then keep re-running bcl2fastq until it is
                 status=139
-                while(!identical(status,character(0)) { #"0")) { #character(0)) ) {
+                while(!identical(status,character(0))) {   #"0")) { #character(0)) ) {
                 #if(!file.exists(fastqR1)) { 
                     # run bcl2fastq to generate fastq.gz files (no demux is happening here)
                     #note, reduce threads if necessary
