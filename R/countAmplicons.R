@@ -194,6 +194,7 @@ buildCountTables=function(bcl.dir, nbuffer, readerBlockSize, amplicons, count.ta
         for(a in names(count.tables)){
           count.tables[[a]]= errorCorrectIdxAndCountAmplicons(per.amplicon.row.index[[a]], count.tables[[a]], ind1,ind2)
         }
+        gc()
     }
     close(i1); close(i2); close(r1);
     names(count.tables)=paste0(names(count.tables), '.table')
