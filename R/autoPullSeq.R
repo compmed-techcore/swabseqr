@@ -107,7 +107,7 @@ bcl2fastqRuns=function(...) {
                 # handle random annoying bcl2fastq file descriptor error and segfaults 
                 # if status returned is not 0 then keep re-running bcl2fastq until it is
                 status=139
-                while(!identical(status,character(0)) ) {
+                while(!identical(status,"0")) { #character(0)) ) {
                 #if(!file.exists(fastqR1)) { 
                     # run bcl2fastq to generate fastq.gz files (no demux is happening here)
                     #note, reduce threads if necessary
@@ -116,7 +116,8 @@ bcl2fastqRuns=function(...) {
                     #status=system(paste("bcl2fastq --runfolder-dir . --output-dir out/ --create-fastq-for-index-reads  --ignore-missing-bcl --use-bases-mask=Y26,I10,I10 --processing-threads",
                     #             cfg$coreVars$threads,
                     #             "--no-lane-splitting --sample-sheet /dev/null"), intern=T)
-                    status=system(paste("bcl-convert --bcl-input-directory . --output-directory out/ --strict-mode false --no-lane-splitting true --force --sample-sheet", system.file("keys", "SampleSheet.csv", package="swabseqr")),intern=T)
+                    status=as.character(system(paste("bcl-convert --bcl-input-directory . --output-directory out/ --strict-mode false --no-lane-splitting true --force --sample-sheet", 
+                                        system.file("keys", "SampleSheet.csv", package="swabseqr")),intern=F))
                     
                     if(cfg$coreVars$fastqc) {fastqcr::fastqc(fq.dir=paste0(bcl.dir, 'out/'), qc.dir=paste0(odir, '/'), threads=3) }
                 }
