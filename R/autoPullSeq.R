@@ -122,7 +122,7 @@ bcl2fastqRuns=function(...) {
                     if(cfg$coreVars$fastqc) {fastqcr::fastqc(fq.dir=paste0(bcl.dir, 'out/'), qc.dir=paste0(odir, '/'), threads=3) }
                 }
                 #}
-                if(file.exists(fastqR1) & identical(status,character(0)) ){
+                if(file.exists(fastqR1) & identical(status,"0")) { #character(0)) ){
                     system(paste0('cp ',  bcl.dir, 'RunParameters.xml', ' ', odir))
                     system(paste0('cp ',  bcl.dir, 'RunInfo.xml', ' ', odir))
                     system(paste0('cp -R ',  bcl.dir, 'InterOp/', ' ', odir))
