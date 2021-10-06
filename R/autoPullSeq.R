@@ -302,6 +302,9 @@ getBaseSpaceRuns=function(...){
     parselist$Demuxed=NA
     parselist$Analyzed=NA
     parselist$Reported=NA
+    if(sum(parelist$Name=='')>0){
+        parselist=parselist[-which(parselist$Name==''),]
+    }
     return(parselist)
 }
 
