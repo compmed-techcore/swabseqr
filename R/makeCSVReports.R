@@ -77,7 +77,7 @@ getSeqStartTimes=function(...) {
 #' @param syncToShared flag to sync results to sample tracking folder, set to F for debugging 
 #'
 #' @export
-syncReports=function(..., syncToShared=T, writeCurrentResultsTable=F) {
+syncReports=function(..., syncToShared=T, writeCurrentResultsTable=F, inconclusive_rate_for_failed_run=0.5) {
     rTable = getRunTableStatus()
      
     dir.create(cfg$localMirrorSeq.dir)
@@ -89,11 +89,14 @@ syncReports=function(..., syncToShared=T, writeCurrentResultsTable=F) {
     
 
     for(r in 1:nrow(rTable)) {
+        
         runName=rTable$Name[r] 
         #bcl.dir is different here
         bcl.dir=paste0(cfg$bcl.dir, runName, '/')
         odir=paste0(cfg$seq.run.dir, runName)
         if(rTable$Downloaded[r] & rTable$Bcl2fastq[r] & rTable$Demuxed[r] & rTable$Analyzed[r] & !rTable$Reported[r]){
+            #added code to disable reporting for inconclusive runs 
+            technicalFail=F
             if(writeCurrentResultsTable) {
                 currResults %>% utils::write.csv(paste0(cfg$remote.dir, 'completed/', Sys.Date(), '_current_results.csv'), row.names=F)
             }
@@ -120,60 +123,62 @@ syncReports=function(..., syncToShared=T, writeCurrentResultsTable=F) {
             #07/27/21
             results = results %>% dplyr::mutate(currLowPos=!(Barcode %in% prevLowPos$Barcode) & (S2_normalized_to_S2_spike>cfg$coreVars$Ratio & S2_normalized_to_S2_spike<0.5) )
 
+            if((sum(results$result=='Inconclusive')/nrow(results))>inconclusive_rate_for_failed_run){ technicalFail=T }
             # output the inconclusives that have only occurred once and should be rerun 
             # 07/27/21 or the current low positives 
 
-            fo=paste0(odir,'/results/', rTable$Experiment[r],'_please_pull_inconclusives.csv')
-            if(file.exists(fo)){file.remove(fo)}
-            #07/27/21
-            #dplyr::filter(result=='Inconclusive' | currLowPos) 
-            results %>% dplyr::filter(result=='Inconclusive'| currLowPos ) %>% 
-                        dplyr::filter(!(Barcode %in% prevInconclusives$Barcode)) %>%
-                        dplyr::select("Barcode","result","S2_normalized_to_S2_spike", "Plate_384","Plate_96_BC","quadrant_96","Pos96","orders_file","Organization","Department","Population","Collection date+time") %>%
+            if(!technicalFail){
+                fo=paste0(odir,'/results/', rTable$Experiment[r],'_please_pull_inconclusives.csv')
+                if(file.exists(fo)){file.remove(fo)}
+                #07/27/21
+                #dplyr::filter(result=='Inconclusive' | currLowPos) 
+                results %>% dplyr::filter(result=='Inconclusive'| currLowPos ) %>% 
+                            dplyr::filter(!(Barcode %in% prevInconclusives$Barcode)) %>%
+                            dplyr::select("Barcode","result","S2_normalized_to_S2_spike", "Plate_384","Plate_96_BC","quadrant_96","Pos96","orders_file","Organization","Department","Population","Collection date+time") %>%
+                            dplyr::arrange(Plate_384, quadrant_96, Pos96) %>%
+                            utils::write.csv(fo, row.names=F)
+
+                # output the positives for a run 
+                fo=paste0(odir,'/results/', rTable$Experiment[r],'_positives.csv')
+                if(file.exists(fo)){file.remove(fo)}
+                
+                #07/27/21
+                # dplyr::filter(result=='Positive' & !currLowPos) 
+                results %>% dplyr::filter(result=='Positive' & !currLowPos ) %>% 
+                        dplyr::select("Barcode","result","S2_normalized_to_S2_spike","Plate_384","Plate_96_BC","quadrant_96","Pos96","orders_file","Organization","Department","Population","Collection date+time") %>%
                         dplyr::arrange(Plate_384, quadrant_96, Pos96) %>%
                         utils::write.csv(fo, row.names=F)
 
-            # output the positives for a run 
-            fo=paste0(odir,'/results/', rTable$Experiment[r],'_positives.csv')
-            if(file.exists(fo)){file.remove(fo)}
-            
-            #07/27/21
-            # dplyr::filter(result=='Positive' & !currLowPos) 
-            results %>% dplyr::filter(result=='Positive' & !currLowPos ) %>% 
-                    dplyr::select("Barcode","result","S2_normalized_to_S2_spike","Plate_384","Plate_96_BC","quadrant_96","Pos96","orders_file","Organization","Department","Population","Collection date+time") %>%
-                    dplyr::arrange(Plate_384, quadrant_96, Pos96) %>%
-                    utils::write.csv(fo, row.names=F)
+                # create output directory
+                dir.create(paste0(odir,'/results/abbrev/'))
 
-            # create output directory
-            dir.create(paste0(odir,'/results/abbrev/'))
-
-            # output information on positives/negatives for upload to preciseQ
-            results.split=results%>% dplyr::select("Barcode","result","currLowPos", "orders_file","Organization","Department","Population","Collection date+time")
-            #added 3/10/21 for new 
-            results.split$status='Received'
-            results.split = results.split %>% dplyr::relocate(status, .after=result)
-            # ---
-            results.split=split(results.split, results$Organization)
-            for(n in names(results.split)){
-                 #results that aren't inconclusive
-                 fo=paste0(odir,'/results/abbrev/', rTable$Experiment[r],'_',n, '_results.csv')
-                 if(file.exists(fo)){file.remove(fo)}
-                 
-                 #07/27/21
-                 #dplyr::filter(result!='Inconclusive' & !currLowPos) 
-                 results.split[[n]] %>% dplyr::filter(result!='Inconclusive' & !currLowPos ) %>% dplyr::select(-currLowPos) %>%
-                     dplyr::arrange(orders_file, Barcode) %>% dplyr::distinct() %>% utils::write.csv(fo, row.names=F)
-                
-                 #results that are inconclusive and were inconclusive for a previous run
-                 fo=paste0(odir,'/results/abbrev/', rTable$Experiment[r],'_',n, '_inconclusives_results.csv')
-                 if(file.exists(fo)){file.remove(fo)}
-               
-                 #07/27/21
-                 #dplyr::filter(Barcode %in% prevInconclusives$Barcode | Barcode %in% prevLowPos$Barcode  )
-                 results.split[[n]] %>%  dplyr::filter(result=='Inconclusive') %>% dplyr::filter((Barcode %in% prevInconclusives$Barcode) | (Barcode %in% prevLowPos$Barcode) ) %>% dplyr::select(-currLowPos) %>%
-                     dplyr::arrange(orders_file, Barcode) %>% dplyr::distinct() %>% utils::write.csv(fo, row.names=F)
-        }
-
+                # output information on positives/negatives for upload to preciseQ
+                results.split=results%>% dplyr::select("Barcode","result","currLowPos", "orders_file","Organization","Department","Population","Collection date+time")
+                #added 3/10/21 for new 
+                results.split$status='Received'
+                results.split = results.split %>% dplyr::relocate(status, .after=result)
+                # ---
+                results.split=split(results.split, results$Organization)
+                for(n in names(results.split)){
+                     #results that aren't inconclusive
+                     fo=paste0(odir,'/results/abbrev/', rTable$Experiment[r],'_',n, '_results.csv')
+                     if(file.exists(fo)){file.remove(fo)}
+                     
+                     #07/27/21
+                     #dplyr::filter(result!='Inconclusive' & !currLowPos) 
+                     results.split[[n]] %>% dplyr::filter(result!='Inconclusive' & !currLowPos ) %>% dplyr::select(-currLowPos) %>%
+                         dplyr::arrange(orders_file, Barcode) %>% dplyr::distinct() %>% utils::write.csv(fo, row.names=F)
+                    
+                     #results that are inconclusive and were inconclusive for a previous run
+                     fo=paste0(odir,'/results/abbrev/', rTable$Experiment[r],'_',n, '_inconclusives_results.csv')
+                     if(file.exists(fo)){file.remove(fo)}
+                   
+                     #07/27/21
+                     #dplyr::filter(Barcode %in% prevInconclusives$Barcode | Barcode %in% prevLowPos$Barcode  )
+                     results.split[[n]] %>%  dplyr::filter(result=='Inconclusive') %>% dplyr::filter((Barcode %in% prevInconclusives$Barcode) | (Barcode %in% prevLowPos$Barcode) ) %>% dplyr::select(-currLowPos) %>%
+                         dplyr::arrange(orders_file, Barcode) %>% dplyr::distinct() %>% utils::write.csv(fo, row.names=F)
+               }   
+            }
             rTable$Reported[r]=T  
             write_yaml_cfg(rTable,cfg)
             #sync results to swabseq sample tracking 
