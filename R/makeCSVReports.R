@@ -77,7 +77,7 @@ getSeqStartTimes=function(...) {
 #' @param syncToShared flag to sync results to sample tracking folder, set to F for debugging 
 #'
 #' @export
-syncReports=function(..., syncToShared=T, writeCurrentResultsTable=F, inconclusive_rate_for_failed_run=0.5) {
+syncReports=function(..., syncToShared=T, writeCurrentResultsTable=F) {
     rTable = getRunTableStatus()
      
     dir.create(cfg$localMirrorSeq.dir)
@@ -95,13 +95,18 @@ syncReports=function(..., syncToShared=T, writeCurrentResultsTable=F, inconclusi
         bcl.dir=paste0(cfg$bcl.dir, runName, '/')
         odir=paste0(cfg$seq.run.dir, runName)
         if(rTable$Downloaded[r] & rTable$Bcl2fastq[r] & rTable$Demuxed[r] & rTable$Analyzed[r] & !rTable$Reported[r]){
-            #added code to disable reporting for inconclusive runs 
-            technicalFail=F
+            
             if(writeCurrentResultsTable) {
                 currResults %>% utils::write.csv(paste0(cfg$remote.dir, 'completed/', Sys.Date(), '_current_results.csv'), row.names=F)
             }
-            
+                
+            #added code to disable reporting for inconclusive runs 10/17/21
+            technicalFail=F
+           
             results=currResults %>% dplyr::filter(sequencingRunName==runName)
+            if(nrow(results)==0 ){ technicalFail=T }
+          
+            if(!technicalFail){
 
             currRunStartTime=seqStartTimes$sequencingRunStartTime[seqStartTimes$sequencingRunName==runName]
            
@@ -122,14 +127,11 @@ syncReports=function(..., syncToShared=T, writeCurrentResultsTable=F, inconclusi
        
             #07/27/21
             results = results %>% dplyr::mutate(currLowPos=!(Barcode %in% prevLowPos$Barcode) & (S2_normalized_to_S2_spike>cfg$coreVars$Ratio & S2_normalized_to_S2_spike<0.5) )
-
-            print(nrow(results))
-            print(sum(results$result=='Inconclusive')/nrow(results))
-            if((sum(results$result=='Inconclusive')/nrow(results))>inconclusive_rate_for_failed_run){ technicalFail=T }
+            #added code to disable reporting for inconclusive runs 10/17/21
+           
             # output the inconclusives that have only occurred once and should be rerun 
             # 07/27/21 or the current low positives 
 
-            if(!technicalFail){
                 fo=paste0(odir,'/results/', rTable$Experiment[r],'_please_pull_inconclusives.csv')
                 if(file.exists(fo)){file.remove(fo)}
                 #07/27/21
