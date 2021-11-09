@@ -10,7 +10,7 @@ devtools::install_github("joshsbloom/swabseqr" ,ref="main")
 
 Make sure you have the `rsync` command line tool available and `pandoc` installed. Consider using `devtools::install_version()` if you encounter dependency issues'
 
-Additionally you must install `bcl2fastq` ,for converting bcl to fastq.gz files, and `bs` , the Basespace CLI tool
+Additionally you must install `bcl-convert` ,for converting bcl to fastq.gz files, and `bs` , the Basespace CLI tool
 
 The `bs` CLI config file in ~/.basespace/default.cfg should be setup and workspaces can be made accessible with:
 `bs auth --scopes "BROWSE GLOBAL,READ GLOBAL,CREATE GLOBAL,MOVETOTRASH GLOBAL,START APPLICATIONS,MANAGE APPLICATIONS" --force`
@@ -41,7 +41,7 @@ The following entries can be modifed to control pipeline state:
 
 * `Downloaded: (yes/no)` tracks/controls whether a sequencing run has been downloaded from Illumnia Basespace CLI `bs` to bcls/ see bcl.dir below
 
-* `Bcl2fastq: (yes/no)` tracks/controls whether `bcl2fastq` has been run to generate Undetermined.*.fastq.gz files for each run in bcls/${Name}/out/
+* `Bcl2fastq: (yes/no)` tracks/controls whether `bcl-convert` has been run to generate Undetermined.*.fastq.gz files for each run in bcls/${Name}/out/
 
 * `Demumxed: (yes/no)` tracks/controls whether amplicon and index matching has been performed. Note this step depends only on the expected molecular barcodes and runs without sample matrix tube information. 
 
