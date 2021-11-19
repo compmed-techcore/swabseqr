@@ -155,6 +155,7 @@ getsavRStats=function(bcl.dir, amp.match.summary.table){
                        "phiX"=paste(round(phiX,2), "%"), "clusterPF"=paste(round(clusterPF*100,1), "%"),
                        "clusterDensity"=paste(round(clusterDensity,1), 'K/mm^2'), 
                        "clusterDensity_perLane"=paste(sapply(clusterDensity_perLane, round,1),collapse=' '))
+    }
     else{
      seq.metrics=data.frame("totalReads"=NA,
                        "totalReadsPassedQC"=NA,
