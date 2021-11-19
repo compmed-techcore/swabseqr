@@ -144,6 +144,7 @@ parseKeyAndMerge=function(index.key, sample.key.file.local) {
 #use savR to get some run stats 
 getsavRStats=function(bcl.dir, amp.match.summary.table){
     sav=savR::savR(bcl.dir)
+    if(sav@instrument!="VH00763") {
     tMet=savR::tileMetrics(sav)
     phiX=mean(tMet$value[tMet$code=='300'])
     clusterPF=mean(tMet$value[tMet$code=='103']/tMet$value[tMet$code=='102'], na.rm=T)
@@ -154,6 +155,13 @@ getsavRStats=function(bcl.dir, amp.match.summary.table){
                        "phiX"=paste(round(phiX,2), "%"), "clusterPF"=paste(round(clusterPF*100,1), "%"),
                        "clusterDensity"=paste(round(clusterDensity,1), 'K/mm^2'), 
                        "clusterDensity_perLane"=paste(sapply(clusterDensity_perLane, round,1),collapse=' '))
+    else{
+     seq.metrics=data.frame("totalReads"=NA,
+                       "totalReadsPassedQC"=NA,
+                       "phiX"=NA,
+                       "clusterDensity"=NA, 
+                       "clusterDensity_perLane"=NA)
+    }
 }
 
 #get some stats about observed reads matching expected amplicons and index sequences
