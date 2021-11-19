@@ -35,9 +35,9 @@ generateExpectedIndices=function(diri) {
     #MiniSeq High / MiniSeq Rapid High / NextSeq Mid / NextSeq High
     #don't reverse comp i5 for miniseq rapid or miseq 
     i5RC.toggle=TRUE
-    #addition to deal with nextseq2000 11/19/21
+    #addition to handle lack of chemistry tag for nextseq2000 11/19/21
     if(!is.null(chemistry)) {
-        if(chemistry=="MiniSeq Rapid High" | chemistry=="MiSeq") {i5RC.toggle=F} 
+    if(chemistry=="MiniSeq Rapid High" | chemistry=="MiSeq") {i5RC.toggle=F} 
     }
     ## for 1536 UDI setup ----------------------------------------------------
     #i7s=plater::read_plates(cfg$i7_plate_key_file, well_ids_column="Sample_Well")
@@ -88,7 +88,7 @@ generateExpectedIndices=function(diri) {
 
 
     i5ss$Plate_ID=paste0('Plate', i5ss$Plate_ID)
-    i5ss$Sample_ID=pase0(i5ss$Plate_ID,'-', i5ss$Sample_Well)
+    i5ss$Sample_ID=paste0(i5ss$Plate_ID,'-', i5ss$Sample_Well)
     if(i5RC.toggle) { i5ss$index2=as.vector(sapply(i5ss$index2, revcomp)) }
 
 
