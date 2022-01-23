@@ -161,4 +161,12 @@ updates after a run finishes and you need to generate the csv results files for 
 ### Additional Background
 see [medrxiv preprint](https://www.medrxiv.org/content/10.1101/2020.08.04.20167874v2) and [Octant Notion SwabSeq page](https://www.notion.so/Octant-SwabSeq-Testing-9eb80e793d7e46348038aa80a5a901fd) for information about technology and licensing
 
+### Running in a container
+This repo also contains a DOCKERFILE and other relevant files needed to run the script in a platform independent docker container.
+Simply build an image from the DOCKERFILE, edit the start.sh script with 1. the path to the shared drive 2. the name of your image, and run
+```shell
+./start.sh
+```
+This will launch an interactive R session, from which you can run the commands in main.R
+
 
