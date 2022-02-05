@@ -98,7 +98,8 @@ bcl2fastqRuns=function(...) {
 
         if(rTable$Downloaded[r] & !rTable$Bcl2fastq[r]){
             
-            if(file.exists(paste0(bcl.dir, 'RTAComplete.txt')) & file.exists(paste0(bcl.dir, 'RTARead3Complete.txt')) ) { 
+            #another nextseq 2000 hack 11/19/21
+            if(file.exists(paste0(bcl.dir, 'RTAComplete.txt')) & (file.exists(paste0(bcl.dir, 'RTARead3Complete.txt')) | file.exists(paste0(bcl.dir,'RTA3.cfg'))) ) { 
                 setwd(bcl.dir)
                 #run bcl2fastq even if fastq.gz file exists 
                 # if fastqs don't exist run bcl2fastq to generate them 
