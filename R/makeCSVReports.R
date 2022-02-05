@@ -17,7 +17,8 @@ getOrders=function(...){
 getPrevResults=function(..., inconclusive_rate_for_failed_run=0.5) {
     run.samples=list.files(paste0(cfg$localMirrorSeq.run.dir), pattern='_report.csv', full.names=T, recursive=T)
     #new code added 07/27/21 to reduce lookup of previous samples to those run within the last two weeks 
-    edates=base::as.Date(data.table::tstrsplit(data.table::tstrsplit(run.samples, '/')[[9]], '_')[[1]], '%y%m%d')
+    # note changed from 9 to 7 for working on non chs workstation, needs a variable here
+    edates=base::as.Date(data.table::tstrsplit(data.table::tstrsplit(run.samples, '/')[[7]], '_')[[1]], '%y%m%d')
     #get previous runs within the last 2 weeks
     run.samples=run.samples[abs(edates-Sys.Date())<14]
     
