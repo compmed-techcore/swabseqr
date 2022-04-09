@@ -7,16 +7,19 @@ WORKDIR /data/Covid/swabseqr
 COPY . .
 COPY ./default.cfg /root/.basespace/default.cfg
 
-RUN wget "https://launch.basespace.illumina.com/CLI/latest/amd64-linux/bs" -O /usr/bin/bs
-RUN chmod u+x /usr/bin/bs
+### This part sets up basespace
+# RUN wget "https://launch.basespace.illumina.com/CLI/latest/amd64-linux/bs" -O /usr/bin/bs
+# RUN chmod u+x /usr/bin/bs
 
-RUN git clone https://github.com/igorbarinov/bcl2fastq.git
+# RUN git clone https://github.com/igorbarinov/bcl2fastq.git
 #RUN rpm -i /bcl2fastq/bcl2fastq2-v2.17.1.14-Linux-x86_64.rpm
-RUN bcl2fastq/install-2.17.sh
+# RUN bcl2fastq/install-2.17.sh
 
-RUN apt-get install rsync
+# RUN apt-get install rsync
 
 RUN    Rscript ./install_packages.R
 
 #CMD ["Rscript","examples/main.R"]
+# Interactive Shell
 CMD ["R"]
+

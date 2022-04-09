@@ -1,3 +1,57 @@
+#' Auto Run the Second half of the Pipeline
+#'
+#' If cfg environment variable is set, this function will autorun the pipeline.
+#' @param check.yaml.interval seconds before checking config.yaml file for updates
+#' @param check.basespace.interval seconds before checking basespace to see if a run has updated
+#'
+#' @export
+autoRunLabOnly=function(check.yaml.interval=30, check.basespace.interval=600, syncToShared=T, writeCurrentResultsTable=T){
+    if(!exists("cfg")) { print('please run buildEnvironment() before autoRun()'); return(NULL)}
+
+    if(!file.exists(cfg$yaml.cfg.file))  {
+        print(paste(cfg$yaml.cfg.file, 'not found'))
+        return(NULL)
+    }
+
+    inc=0  
+    before=tools::md5sum(cfg$yaml.cfg.file)
+    after="" #before
+    while(TRUE){
+        if(inc%%10==0){print(Sys.time()) }
+        if( (after!=before) | inc%%(check.basespace.interval/check.yaml.interval)==0) {
+            # #before=md5sum(cfg$yaml.cfg.file)
+            # print('syncing config.yaml')
+            # syncRuns()
+            # #after=md5sum(cfg$yaml.cfg.file)
+            # print('downloading BCLs')
+            # downloadRuns()
+            # #before=md5sum(cfg$yaml.cfg.file)
+            # print('converting to fastq.gz')
+            # bcl2fastqRuns() 
+            # #after=md5sum(cfg$yaml.cfg.file)
+
+            # print('demultiplexing runs and counting amplicons')
+            # demuxRuns() 
+
+            #before=md5sum(cfg$yaml.cfg.file)
+            print('matching sequencing runs to key files')
+            lookUpKeys()
+
+            print('matching samples to observed indices')
+            addIdentifiers()
+
+            print('generating reports')
+            syncReports(syncToShared=syncToShared, writeCurrentResultsTable=writeCurrentResultsTable)
+            print(paste('Done, pausing for ', check.basespace.interval, 'seconds'))
+        }
+        before=tools::md5sum(cfg$yaml.cfg.file)
+        Sys.sleep(check.yaml.interval)
+        after=tools::md5sum(cfg$yaml.cfg.file)
+        inc=inc+1
+
+   }
+}
+
 #' Auto Run the Pipeline
 #'
 #' If cfg environment variable is set, this function will autorun the pipeline.
